@@ -1,0 +1,57 @@
+﻿Day,Meal,Dish 1,Dish 2,Dish 3,Dish 4
+1,Lunch,Stewed Beef Brisket,Steamed Egg,Spinach with Garlic,Zucchini Stir-fry
+1,Dinner,Braised Pork Belly,Soy Sauce Egg,Kimchi,Cucumber Salad
+2,Lunch,Lamb Chops,Ham and Egg Sandwhich,Spinach with Garlic,Meatballs
+2,Dinner,Spicy Shrimp,Corn Soup with Egg,Zucchini Stir-fry,Grilled Salmon
+3,Lunch,Kung Pao Chicken,Tomato Scrambled Eggs,Potato Shreds,Steamed Egg
+3,Dinner,Drunken Chicken,Poached Egg,Tofu Skin Salad,Meatballs
+4,Lunch,Fried Chicken Wings,Quail Eggs,Cauliflower Stir-fry,Steamed Fish
+4,Dinner,Drunken Chicken,Omelette,Asparagus stir-fry,Mushrooms with Bok Choy
+5,Lunch,Lamb Chops,Steamed Egg,Boiled Broccoli,Quail Eggs
+5,Dinner,Roast Duck,Onion Scrambled Eggs,Zucchini Stir-fry,Egg Salad
+6,Lunch,Meatballs,Onion Scrambled Eggs,Boiled Broccoli,Fried Rice with Egg
+6,Dinner,Lamb Chops,Ham and Egg Sandwhich,Tofu Skin Salad,Stewed Beef Brisket
+7,Lunch,Kung Pao Chicken,Soy Sauce Egg,Kimchi,Egg Salad
+7,Dinner,Meatballs,Tea Egg,Cauliflower Stir-fry,Egg Drop Soup
+8,Lunch,Fried Chicken Wings,Tomato Scrambled Eggs,Stir-fried Cabbage,Poached Egg
+8,Dinner,Roast Duck,Onion Scrambled Eggs,Tofu Skin Salad,Zucchini Stir-fry
+9,Lunch,Grilled Salmon,Fried Rice with Egg,Eggplant Casserole,Steamed Egg
+9,Dinner,Drunken Chicken,Corn Soup with Egg,Asparagus stir-fry,Egg Drop Soup
+10,Lunch,Roast Duck,Tomato Scrambled Eggs,Kimchi,Beef Stir-fry
+10,Dinner,Sweet and Sour Pork,Tea Egg,Cucumber Salad,Drunken Chicken
+11,Lunch,Beef Stir-fry,Corn Soup with Egg,Zucchini Stir-fry,Spinach with Garlic
+11,Dinner,Steamed Fish,Ham and Egg Sandwhich,Green Beans with Pork,Stir-fried Cabbage
+12,Lunch,Beef Stir-fry,Poached Egg,Boiled Broccoli,Spicy Shrimp
+12,Dinner,Kung Pao Chicken,Ham and Egg Sandwhich,Kimchi,Tomato Scrambled Eggs
+13,Lunch,Roast Duck,Corn Soup with Egg,Stir-fried Cabbage,Quail Eggs
+13,Dinner,Sweet and Sour Pork,Onion Scrambled Eggs,Cauliflower Stir-fry,Kung Pao Chicken
+14,Lunch,Stewed Beef Brisket,Scotch Egg,Green Beans with Pork,Onion Scrambled Eggs
+14,Dinner,Steamed Fish,Omelette,Boiled Broccoli,Drunken Chicken
+15,Lunch,Stewed Beef Brisket,Onion Scrambled Eggs,Tofu Skin Salad,Braised Pork Belly
+15,Dinner,Grilled Salmon,Corn Soup with Egg,Asparagus stir-fry,Mapo Tofu
+16,Lunch,Braised Pork Belly,Omelette,Tofu Skin Salad,Fried Rice with Egg
+16,Dinner,Roast Duck,Onion Scrambled Eggs,Mushrooms with Bok Choy,Lamb Chops
+17,Lunch,Grilled Salmon,Poached Egg,Zucchini Stir-fry,Green Beans with Pork
+17,Dinner,Stewed Beef Brisket,Tea Egg,Potato Shreds,Stir-fried Cabbage
+18,Lunch,Lamb Chops,Egg Salad,Asparagus stir-fry,Mapo Tofu
+18,Dinner,Stewed Beef Brisket,Soy Sauce Egg,Eggplant Casserole,Steamed Fish
+19,Lunch,Meatballs,Onion Scrambled Eggs,Spinach with Garlic,Steamed Fish
+19,Dinner,Kung Pao Chicken,Tea Egg,Potato Shreds,Grilled Salmon
+20,Lunch,Grilled Salmon,Egg Salad,Potato Shreds,Tofu Skin Salad
+20,Dinner,Stewed Beef Brisket,Onion Scrambled Eggs,Asparagus stir-fry,Beef Stir-fry
+21,Lunch,Fried Chicken Wings,Tea Egg,Tofu Skin Salad,Kung Pao Chicken
+21,Dinner,Lamb Chops,Egg Drop Soup,Cauliflower Stir-fry,Corn Soup with Egg
+22,Lunch,Lamb Chops,Omelette,Spinach with Garlic,Fried Chicken Wings
+22,Dinner,Roast Duck,Egg Salad,Eggplant Casserole,Soy Sauce Egg
+23,Lunch,Roast Duck,Scotch Egg,Spinach with Garlic,Fried Chicken Wings
+23,Dinner,Sweet and Sour Pork,Quail Eggs,Cauliflower Stir-fry,Egg Drop Soup
+24,Lunch,Sweet and Sour Pork,Soy Sauce Egg,Mushrooms with Bok Choy,Corn Soup with Egg
+24,Dinner,Beef Stir-fry,Tomato Scrambled Eggs,Zucchini Stir-fry,Drunken Chicken
+25,Lunch,Spicy Shrimp,Tomato Scrambled Eggs,Mushrooms with Bok Choy,Beef Stir-fry
+25,Dinner,Stewed Beef Brisket,Omelette,Stir-fried Cabbage,Egg Drop Soup
+26,Lunch,Spicy Shrimp,Tomato Scrambled Eggs,Zucchini Stir-fry,Lamb Chops
+26,Dinner,Stewed Beef Brisket,Corn Soup with Egg,Kimchi,Egg Drop Soup
+27,Lunch,Sweet and Sour Pork,Omelette,Asparagus stir-fry,Poached Egg
+27,Dinner,Braised Pork Belly,Quail Eggs,Zucchini Stir-fry,Ham and Egg Sandwhich
+28,Lunch,Beef Stir-fry,Ham and Egg Sandwhich,Asparagus stir-fry,Egg Drop Soup
+28,Dinner,Grilled Salmon,Soy Sauce Egg,Stir-fried Cabbage,Roast Duck
