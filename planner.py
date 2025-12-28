@@ -80,14 +80,23 @@ class MealPlanner:
         
         return lunch, dinner
 
-    def generate_month_plan(self, days=28):
+    def generate_month_plan(self, days=28, start_date=None):
+        import datetime
+        
+        if start_date is None:
+            start_date = datetime.date.today()
+            
         plan = []
-        for day_num in range(1, days + 1):
+        for day_num in range(days):
+            current_date = start_date + datetime.timedelta(days=day_num)
             lunch, dinner = self.generate_day()
             
             # Record the day's plan
             day_data = {
-                'Day': day_num,
+                'Day': day_num + 1,
+                'Date': current_date, # Date object
+                'DateStr': current_date.strftime("%Y-%m-%d"),
+                'Weekday': current_date.strftime("%a"), # Mon, Tue...
                 'Lunch': [d.name for d in lunch],
                 'Dinner': [d.name for d in dinner],
                 'Lunch_Objects': lunch,
@@ -137,13 +146,23 @@ def save_plan_to_csv(plan, filename="meal_plan.csv"):
     rows = []
     for day in plan:
         # Lunch
-        row_l = {'Day': day['Day'], 'Meal': 'Lunch'}
+        row_l = {
+            'Day': day['Day'], 
+            'Date': day['DateStr'], 
+            'Weekday': day['Weekday'], 
+            'Meal': 'Lunch'
+        }
         for i, d in enumerate(day['Lunch']):
             row_l[f'Dish {i+1}'] = d
         rows.append(row_l)
         
         # Dinner
-        row_d = {'Day': day['Day'], 'Meal': 'Dinner'}
+        row_d = {
+            'Day': day['Day'], 
+            'Date': day['DateStr'], 
+            'Weekday': day['Weekday'], 
+            'Meal': 'Dinner'
+        }
         for i, d in enumerate(day['Dinner']):
             row_d[f'Dish {i+1}'] = d
         rows.append(row_d)

@@ -1,57 +1,57 @@
-﻿Day,Meal,Dish 1,Dish 2,Dish 3,Dish 4
-1,Lunch,Stewed Beef Brisket,Steamed Egg,Spinach with Garlic,Zucchini Stir-fry
-1,Dinner,Braised Pork Belly,Soy Sauce Egg,Kimchi,Cucumber Salad
-2,Lunch,Lamb Chops,Ham and Egg Sandwhich,Spinach with Garlic,Meatballs
-2,Dinner,Spicy Shrimp,Corn Soup with Egg,Zucchini Stir-fry,Grilled Salmon
-3,Lunch,Kung Pao Chicken,Tomato Scrambled Eggs,Potato Shreds,Steamed Egg
-3,Dinner,Drunken Chicken,Poached Egg,Tofu Skin Salad,Meatballs
-4,Lunch,Fried Chicken Wings,Quail Eggs,Cauliflower Stir-fry,Steamed Fish
-4,Dinner,Drunken Chicken,Omelette,Asparagus stir-fry,Mushrooms with Bok Choy
-5,Lunch,Lamb Chops,Steamed Egg,Boiled Broccoli,Quail Eggs
-5,Dinner,Roast Duck,Onion Scrambled Eggs,Zucchini Stir-fry,Egg Salad
-6,Lunch,Meatballs,Onion Scrambled Eggs,Boiled Broccoli,Fried Rice with Egg
-6,Dinner,Lamb Chops,Ham and Egg Sandwhich,Tofu Skin Salad,Stewed Beef Brisket
-7,Lunch,Kung Pao Chicken,Soy Sauce Egg,Kimchi,Egg Salad
-7,Dinner,Meatballs,Tea Egg,Cauliflower Stir-fry,Egg Drop Soup
-8,Lunch,Fried Chicken Wings,Tomato Scrambled Eggs,Stir-fried Cabbage,Poached Egg
-8,Dinner,Roast Duck,Onion Scrambled Eggs,Tofu Skin Salad,Zucchini Stir-fry
-9,Lunch,Grilled Salmon,Fried Rice with Egg,Eggplant Casserole,Steamed Egg
-9,Dinner,Drunken Chicken,Corn Soup with Egg,Asparagus stir-fry,Egg Drop Soup
-10,Lunch,Roast Duck,Tomato Scrambled Eggs,Kimchi,Beef Stir-fry
-10,Dinner,Sweet and Sour Pork,Tea Egg,Cucumber Salad,Drunken Chicken
-11,Lunch,Beef Stir-fry,Corn Soup with Egg,Zucchini Stir-fry,Spinach with Garlic
-11,Dinner,Steamed Fish,Ham and Egg Sandwhich,Green Beans with Pork,Stir-fried Cabbage
-12,Lunch,Beef Stir-fry,Poached Egg,Boiled Broccoli,Spicy Shrimp
-12,Dinner,Kung Pao Chicken,Ham and Egg Sandwhich,Kimchi,Tomato Scrambled Eggs
-13,Lunch,Roast Duck,Corn Soup with Egg,Stir-fried Cabbage,Quail Eggs
-13,Dinner,Sweet and Sour Pork,Onion Scrambled Eggs,Cauliflower Stir-fry,Kung Pao Chicken
-14,Lunch,Stewed Beef Brisket,Scotch Egg,Green Beans with Pork,Onion Scrambled Eggs
-14,Dinner,Steamed Fish,Omelette,Boiled Broccoli,Drunken Chicken
-15,Lunch,Stewed Beef Brisket,Onion Scrambled Eggs,Tofu Skin Salad,Braised Pork Belly
-15,Dinner,Grilled Salmon,Corn Soup with Egg,Asparagus stir-fry,Mapo Tofu
-16,Lunch,Braised Pork Belly,Omelette,Tofu Skin Salad,Fried Rice with Egg
-16,Dinner,Roast Duck,Onion Scrambled Eggs,Mushrooms with Bok Choy,Lamb Chops
-17,Lunch,Grilled Salmon,Poached Egg,Zucchini Stir-fry,Green Beans with Pork
-17,Dinner,Stewed Beef Brisket,Tea Egg,Potato Shreds,Stir-fried Cabbage
-18,Lunch,Lamb Chops,Egg Salad,Asparagus stir-fry,Mapo Tofu
-18,Dinner,Stewed Beef Brisket,Soy Sauce Egg,Eggplant Casserole,Steamed Fish
-19,Lunch,Meatballs,Onion Scrambled Eggs,Spinach with Garlic,Steamed Fish
-19,Dinner,Kung Pao Chicken,Tea Egg,Potato Shreds,Grilled Salmon
-20,Lunch,Grilled Salmon,Egg Salad,Potato Shreds,Tofu Skin Salad
-20,Dinner,Stewed Beef Brisket,Onion Scrambled Eggs,Asparagus stir-fry,Beef Stir-fry
-21,Lunch,Fried Chicken Wings,Tea Egg,Tofu Skin Salad,Kung Pao Chicken
-21,Dinner,Lamb Chops,Egg Drop Soup,Cauliflower Stir-fry,Corn Soup with Egg
-22,Lunch,Lamb Chops,Omelette,Spinach with Garlic,Fried Chicken Wings
-22,Dinner,Roast Duck,Egg Salad,Eggplant Casserole,Soy Sauce Egg
-23,Lunch,Roast Duck,Scotch Egg,Spinach with Garlic,Fried Chicken Wings
-23,Dinner,Sweet and Sour Pork,Quail Eggs,Cauliflower Stir-fry,Egg Drop Soup
-24,Lunch,Sweet and Sour Pork,Soy Sauce Egg,Mushrooms with Bok Choy,Corn Soup with Egg
-24,Dinner,Beef Stir-fry,Tomato Scrambled Eggs,Zucchini Stir-fry,Drunken Chicken
-25,Lunch,Spicy Shrimp,Tomato Scrambled Eggs,Mushrooms with Bok Choy,Beef Stir-fry
-25,Dinner,Stewed Beef Brisket,Omelette,Stir-fried Cabbage,Egg Drop Soup
-26,Lunch,Spicy Shrimp,Tomato Scrambled Eggs,Zucchini Stir-fry,Lamb Chops
-26,Dinner,Stewed Beef Brisket,Corn Soup with Egg,Kimchi,Egg Drop Soup
-27,Lunch,Sweet and Sour Pork,Omelette,Asparagus stir-fry,Poached Egg
-27,Dinner,Braised Pork Belly,Quail Eggs,Zucchini Stir-fry,Ham and Egg Sandwhich
-28,Lunch,Beef Stir-fry,Ham and Egg Sandwhich,Asparagus stir-fry,Egg Drop Soup
-28,Dinner,Grilled Salmon,Soy Sauce Egg,Stir-fried Cabbage,Roast Duck
+﻿Day,Date,Weekday,Meal,Dish 1,Dish 2,Dish 3,Dish 4
+1,2026-01-01,Thu,Lunch,炒牛肉（加洋蔥、醬油膏）,荷包蛋,金針菇（加醬油）,鮭魚（加洋蔥、黑胡椒、鹽）
+1,2026-01-01,Thu,Dinner,虱目魚（加鹽、薑）,紅蘿蔔炒蛋,炒腐竹,地瓜葉
+2,2026-01-02,Fri,Lunch,炒牛肉（加洋蔥、醬油膏）,紅蘿蔔炒蛋,煎豆腐,咖哩飯
+2,2026-01-02,Fri,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,荷包蛋,金針菇（加醬油）,櫛瓜
+3,2026-01-03,Sat,Lunch,虱目魚（加鹽、薑）,紅蘿蔔炒蛋,金針菇（加醬油）,蒸玉米
+3,2026-01-03,Sat,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,荷包蛋,鴻禧菇,櫛瓜
+4,2026-01-04,Sun,Lunch,鮭魚（加洋蔥、黑胡椒、鹽）,荷包蛋,炒干貝,炒牛肉（加洋蔥、醬油膏）
+4,2026-01-04,Sun,Dinner,大比目魚（加薑、蔥、鹽）,紅蘿蔔炒蛋,鴻禧菇,高麗菜
+5,2026-01-05,Mon,Lunch,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,炒腐竹,雞湯麵
+5,2026-01-05,Mon,Dinner,炒牛肉（加洋蔥、醬油膏）,荷包蛋,金針菇（加醬油）,蝦子炒蛋
+6,2026-01-06,Tue,Lunch,虱目魚（加鹽、薑）,荷包蛋,煎豆腐,櫛瓜
+6,2026-01-06,Tue,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,茄子,青花菜
+7,2026-01-07,Wed,Lunch,炒牛肉（加洋蔥、醬油膏）,紅蘿蔔炒蛋,茄子,鮭魚（加洋蔥、黑胡椒、鹽）
+7,2026-01-07,Wed,Dinner,虱目魚（加鹽、薑）,荷包蛋,鴻禧菇,番茄牛肉
+8,2026-01-08,Thu,Lunch,虱目魚（加鹽、薑）,紅蘿蔔炒蛋,炒干貝,大比目魚（加薑、蔥、鹽）
+8,2026-01-08,Thu,Dinner,蒜末炒吻仔魚,荷包蛋,鴻禧菇,炒牛肉（加洋蔥、醬油膏）
+9,2026-01-09,Fri,Lunch,虱目魚（加鹽、薑）,荷包蛋,茄子,番茄牛肉
+9,2026-01-09,Fri,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,鴻禧菇,咖哩飯
+10,2026-01-10,Sat,Lunch,蒜末炒吻仔魚,紅蘿蔔炒蛋,炒腐竹,荷包蛋
+10,2026-01-10,Sat,Dinner,大比目魚（加薑、蔥、鹽）,金針菇（加醬油）,雞湯麵,蒸皎白筍4支
+11,2026-01-11,Sun,Lunch,大比目魚（加薑、蔥、鹽）,荷包蛋,炒干貝,茄子
+11,2026-01-11,Sun,Dinner,蒜末炒吻仔魚,紅蘿蔔炒蛋,鴻禧菇,炒腐竹
+12,2026-01-12,Mon,Lunch,大比目魚（加薑、蔥、鹽）,荷包蛋,炒干貝,鴻禧菇
+12,2026-01-12,Mon,Dinner,蒜末炒吻仔魚,紅蘿蔔炒蛋,金針菇（加醬油）,咖哩飯
+13,2026-01-13,Tue,Lunch,大比目魚（加薑、蔥、鹽）,荷包蛋,炒腐竹,金針菇（加醬油）
+13,2026-01-13,Tue,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,茄子,四季豆或長豆
+14,2026-01-14,Wed,Lunch,虱目魚（加鹽、薑）,紅蘿蔔炒蛋,炒干貝,綠色葉菜
+14,2026-01-14,Wed,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,荷包蛋,炒腐竹,蒸玉米
+15,2026-01-15,Thu,Lunch,大比目魚（加薑、蔥、鹽）,紅蘿蔔炒蛋,金針菇（加醬油）,青花菜
+15,2026-01-15,Thu,Dinner,炒牛肉（加洋蔥、醬油膏）,荷包蛋,茄子,鮭魚（加洋蔥、黑胡椒、鹽）
+16,2026-01-16,Fri,Lunch,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,煎豆腐,荷包蛋
+16,2026-01-16,Fri,Dinner,大比目魚（加薑、蔥、鹽）,茄子,炒牛肉（加洋蔥、醬油膏）,櫛瓜
+17,2026-01-17,Sat,Lunch,大比目魚（加薑、蔥、鹽）,紅蘿蔔炒蛋,鴻禧菇,咖哩飯
+17,2026-01-17,Sat,Dinner,虱目魚（加鹽、薑）,荷包蛋,茄子,鮭魚（加洋蔥、黑胡椒、鹽）
+18,2026-01-18,Sun,Lunch,炒牛肉（加洋蔥、醬油膏）,紅蘿蔔炒蛋,鴻禧菇,炒干貝
+18,2026-01-18,Sun,Dinner,蒜末炒吻仔魚,荷包蛋,炒腐竹,四季豆或長豆
+19,2026-01-19,Mon,Lunch,大比目魚（加薑、蔥、鹽）,荷包蛋,炒干貝,地瓜葉
+19,2026-01-19,Mon,Dinner,虱目魚（加鹽、薑）,紅蘿蔔炒蛋,茄子,金針菇（加醬油）
+20,2026-01-20,Tue,Lunch,蒜末炒吻仔魚,荷包蛋,金針菇（加醬油）,地瓜葉
+20,2026-01-20,Tue,Dinner,炒牛肉（加洋蔥、醬油膏）,紅蘿蔔炒蛋,茄子,薑絲蛤蜊湯
+21,2026-01-21,Wed,Lunch,炒牛肉（加洋蔥、醬油膏）,紅蘿蔔炒蛋,炒干貝,煎豆腐
+21,2026-01-21,Wed,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,荷包蛋,炒腐竹,虱目魚（加鹽、薑）
+22,2026-01-22,Thu,Lunch,蒜末炒吻仔魚,荷包蛋,茄子,炒干貝
+22,2026-01-22,Thu,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,煎豆腐,絲瓜蛤蜊
+23,2026-01-23,Fri,Lunch,大比目魚（加薑、蔥、鹽）,荷包蛋,茄子,蝦子炒蛋
+23,2026-01-23,Fri,Dinner,虱目魚（加鹽、薑）,紅蘿蔔炒蛋,炒腐竹,咖哩飯
+24,2026-01-24,Sat,Lunch,虱目魚（加鹽、薑）,荷包蛋,炒干貝,櫛瓜
+24,2026-01-24,Sat,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,煎豆腐,薑絲蛤蜊湯
+25,2026-01-25,Sun,Lunch,虱目魚（加鹽、薑）,荷包蛋,鴻禧菇,蝦子炒蛋
+25,2026-01-25,Sun,Dinner,大比目魚（加薑、蔥、鹽）,紅蘿蔔炒蛋,金針菇（加醬油）,青花菜
+26,2026-01-26,Mon,Lunch,炒牛肉（加洋蔥、醬油膏）,紅蘿蔔炒蛋,金針菇（加醬油）,櫛瓜
+26,2026-01-26,Mon,Dinner,鮭魚（加洋蔥、黑胡椒、鹽）,荷包蛋,炒腐竹,雞湯麵
+27,2026-01-27,Tue,Lunch,鮭魚（加洋蔥、黑胡椒、鹽）,紅蘿蔔炒蛋,茄子,番茄牛肉
+27,2026-01-27,Tue,Dinner,蒜末炒吻仔魚,荷包蛋,鴻禧菇,金針菇（加醬油）
+28,2026-01-28,Wed,Lunch,蒜末炒吻仔魚,紅蘿蔔炒蛋,炒干貝,鴻禧菇
+28,2026-01-28,Wed,Dinner,大比目魚（加薑、蔥、鹽）,荷包蛋,金針菇（加醬油）,絲瓜蛤蜊

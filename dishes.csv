@@ -1,42 +1,30 @@
 Dish Name,Category,Ingredients
-Kung Pao Chicken,Protein,"Chicken, Peanuts, Chili, Scallions"
-Mapo Tofu,DC,"Tofu, Minced Pork, Doubanjiang"
-Steamed Egg,Egg,Eggs
-Stir-fried Cabbage,Other,Cabbage
-Braised Pork Belly,Protein,"Pork Belly, Soy Sauce, Sugar"
-Tomato Scrambled Eggs,Egg,"Tomato, Eggs"
-Spinach with Garlic,Other,"Spinach, Garlic"
-Grilled Salmon,Protein,Salmon
-Omelette,Egg,Eggs
-Boiled Broccoli,Other,Broccoli
-Beef Stir-fry,Protein,"Beef, Onions, Peppers"
-Egg Drop Soup,Egg,"Eggs, Cornstarch"
-Cauliflower Stir-fry,Other,Cauliflower
-Sweet and Sour Pork,Protein,"Pork, Pineapple, Peppers"
-Soy Sauce Egg,Egg,Eggs
-Green Beans with Pork,Other,"Green Beans, Minced Pork"
-Fried Chicken Wings,Protein,Chicken Wings
-Tea Egg,Egg,Eggs
-Mushrooms with Bok Choy,Other,"Mushrooms, Bok Choy"
-Steamed Fish,Protein,Fish
-Ham and Egg Sandwhich,Egg,"Ham, Bread, Eggs"
-Fried Rice with Egg,Egg,"Rice, Eggs, Peas"
-Tofu Skin Salad,Other,"Tofu Skin, Cucumber"
-Drunken Chicken,Protein,Chicken
-Onion Scrambled Eggs,Egg,"Onion, Eggs"
-Potato Shreds,Other,Potatoes
-Stewed Beef Brisket,Protein,"Beef Brisket, Radish"
-Corn Soup with Egg,Egg,"Corn, Eggs"
-Cucumber Salad,Other,"Cucumber, Garlic"
-Roast Duck,Protein,Duck
-Quail Eggs,Egg,Quail Eggs
-Eggplant Casserole,Other,"Eggplant, Minced Pork"
-Spicy Shrimp,Protein,Shrimp
-Scotch Egg,Egg,"Eggs, Sausage Meat"
-Zucchini Stir-fry,Other,Zucchini
-Lamb Chops,Protein,Lamb
-Egg Salad,Egg,"Eggs, Mayonnaise"
-Kimchi,Other,Cabbage
-Meatballs,Protein,"Minced Meat, Breadcrumbs"
-Poached Egg,Egg,Eggs
-Asparagus stir-fry,Other,Asparagus
+鮭魚（加洋蔥、黑胡椒、鹽）,Protein,鮭魚
+荷包蛋,Egg,雞蛋
+炒牛肉（加洋蔥、醬油膏）,Protein,牛小排
+煎豆腐,Other,豆腐
+鴻禧菇,Other,鴻禧菇
+咖哩飯,Combo,"馬鈴薯, 蘋果, 洋蔥, 咖哩塊, 紅蘿蔔, 雞肉或牛小排"
+雞湯麵,Combo,"雞肉, 香菇, 蒜頭"
+大比目魚（加薑、蔥、鹽）,Protein,大比目魚
+炒腐竹,Other,腐竹
+紅蘿蔔炒蛋,Egg,"雞蛋, 紅蘿蔔"
+虱目魚（加鹽、薑）,Protein,虱目魚
+炒干貝,Other,干貝
+蝦子炒蛋,"Egg, Protein","蝦子, 雞蛋"
+蒜末炒吻仔魚,Protein,吻仔魚
+薑絲蛤蜊湯,Soup,蛤蜊
+絲瓜蛤蜊,Vegetable,"絲瓜, 蛤蜊"
+青花菜,Vegetable,青花菜
+白花椰菜,Vegetable,白花椰菜
+地瓜葉,Vegetable,地瓜葉
+高麗菜,Vegetable,高麗菜
+四季豆或長豆,Vegetable,四季豆或長豆
+櫛瓜,Vegetable,櫛瓜
+蒸玉米,Vegetable,玉米
+蒸皎白筍4支,Vegetable,皎白筍
+娃娃菜,Vegetable,娃娃菜
+綠色葉菜,Vegetable,綠色葉菜
+茄子,Other,茄子
+金針菇（加醬油）,Other,金針菇
+番茄牛肉,Combo,番茄、牛小排、洋蔥、馬鈴薯

@@ -11,6 +11,7 @@ def main():
     parser.add_argument('--output-plan', '-o', default='meal_plan.csv', help='Output filename for the meal plan')
     parser.add_argument('--output-shop', '-s', default='shopping_list.csv', help='Output filename for the shopping list')
     parser.add_argument('--output-html', '-w', default='meal_plan_report.html', help='Output filename for the Web Report')
+    parser.add_argument('--start-date', type=str, default=None, help='Start date in YYYY-MM-DD format (default: today)')
     
     args = parser.parse_args()
     
@@ -31,8 +32,17 @@ def main():
     
     planner = MealPlanner(dishes)
     
-    print(f"Generating plan for {args.days} days...")
-    plan = planner.generate_month_plan(days=args.days)
+    start_date = None
+    if args.start_date:
+        import datetime
+        try:
+            start_date = datetime.datetime.strptime(args.start_date, "%Y-%m-%d").date()
+        except ValueError:
+            print("Error: Invalid date format. Please use YYYY-MM-DD.")
+            sys.exit(1)
+    
+    print(f"Generating plan for {args.days} days starting from {start_date if start_date else 'Today'}...")
+    plan = planner.generate_month_plan(days=args.days, start_date=start_date)
     
     save_plan_to_csv(plan, args.output_plan)
     

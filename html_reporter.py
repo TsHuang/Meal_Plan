@@ -1,11 +1,39 @@
 import os
 import webbrowser
+import datetime
 
 def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.html"):
     """
     Generates a premium-looking HTML report for the meal plan.
+    Uses a Calendar Layout (Sun-Sat).
     """
     
+    # Pre-process plan into weeks for calendar grid
+    # We need to pad the beginning if the first day isn't Sunday
+    
+    # 0 = Mon, 6 = Sun in Python's weekday()
+    # But usually calendars are Sun=0, Mon=1...Sat=6 or Mon=0...Sun=6
+    # User asked for Sun-Sat. 
+    # Python msg: Mon=0, Sun=6.
+    # We want visual grid: Sun | Mon | Tue ... | Sat
+    
+    calendar_days = []
+    
+    if plan:
+        first_date = plan[0]['Date']
+        # weekday(): Mon=0, Sun=6.
+        # We want Sun to be index 0 in our grid.
+        # Python: Mon(0) -> 1, Tue(1) -> 2 ... Sat(5)->6, Sun(6)->0
+        start_dow = (first_date.weekday() + 1) % 7
+        
+        # Add empty padding days
+        for _ in range(start_dow):
+            calendar_days.append(None)
+            
+        # Add actual days
+        for day in plan:
+            calendar_days.append(day)
+            
     # CSS Styles (Dark Mode, Premium Feel)
     css = """
     :root {
@@ -18,6 +46,7 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         --protein: #fca5a5;
         --egg: #fde047;
         --other: #86efac;
+        --border: rgba(255,255,255,0.08);
     }
     body {
         font-family: 'Inter', system-ui, -apple-system, sans-serif;
@@ -28,7 +57,7 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         line-height: 1.6;
     }
     .container {
-        max-width: 1200px;
+        max-width: 1400px;
         margin: 0 auto;
     }
     header {
@@ -81,12 +110,88 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         display: block;
     }
     
-    /* Grid Layout for Weeks */
-    .week-grid {
+    /* Calendar Grid */
+    .calendar-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 15px;
     }
+    
+    .weekday-header {
+        text-align: center;
+        font-weight: bold;
+        color: var(--accent);
+        padding: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+    
+    /* Day Card Styles */
+    .day-card {
+        background: var(--card-bg);
+        border-radius: 12px;
+        padding: 15px;
+        border: 1px solid var(--border);
+        min-height: 200px;
+        display: flex;
+        flex-direction: column;
+    }
+    .day-card.empty {
+        background: transparent;
+        border: none;
+    }
+    
+    .date-header {
+        font-size: 1.1rem;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 8px;
+    }
+    .date-num {
+        color: var(--text-main);
+    }
+    .date-weekday {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+    }
+    
+    .meal-block {
+        margin-bottom: 12px;
+        flex-grow: 1;
+    }
+    .meal-title {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        color: var(--accent);
+        margin-bottom: 4px;
+        font-weight: 700;
+        opacity: 0.8;
+    }
+    
+    .dish-list {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .dish-tag {
+        font-size: 0.85rem;
+        padding: 4px 8px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 4px;
+        border-left-width: 3px;
+        border-left-style: solid;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .dish-Protein { border-left-color: var(--protein); }
+    .dish-Egg { border-left-color: var(--egg); }
+    .dish-Other { border-left-color: var(--other); }
     
     /* Shopping List Styles */
     .shop-week {
@@ -94,85 +199,40 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         border-radius: 20px;
         padding: 25px;
         margin-bottom: 25px;
-        border: 1px solid rgba(255,255,255,0.05);
+        border: 1px solid var(--border);
     }
     .shop-week h3 {
         color: var(--accent);
         margin-top: 0;
-        border-bottom: 1px solid rgba(255,255,255,0.1);
+        border-bottom: 1px solid var(--border);
         padding-bottom: 10px;
     }
     .shop-list {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
         list-style: none;
         padding: 0;
     }
     .shop-item {
         background: rgba(255,255,255,0.03);
-        padding: 8px 12px;
+        padding: 10px 15px;
         border-radius: 8px;
-        font-size: 0.9rem;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
     .shop-count {
         color: var(--accent);
         font-weight: bold;
+        background: rgba(56, 189, 248, 0.1);
+        padding: 2px 8px;
+        border-radius: 10px;
     }
-    
-    /* Meal Plan Table Styles */
-    .day-card {
-        background: var(--card-bg);
-        border-radius: 16px;
-        padding: 20px;
-        border: 1px solid rgba(255,255,255,0.05);
-        transition: transform 0.2s;
-    }
-    .day-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-    }
-    .day-header {
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 15px;
-        color: var(--text-main);
-    }
-    
-    .meal-block {
-        margin-bottom: 15px;
-    }
-    .meal-title {
-        font-size: 0.8rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: var(--text-muted);
-        margin-bottom: 5px;
-        font-weight: 700;
-    }
-    .dish-tag {
-        display: inline-block;
-        padding: 4px 10px;
-        border-radius: 6px;
-        background: rgba(255,255,255,0.1);
-        margin: 2px;
-        font-size: 0.9rem;
-    }
-    .dish-Protein { border-left: 3px solid var(--protein); }
-    .dish-Egg { border-left: 3px solid var(--egg); }
-    .dish-Other { border-left: 3px solid var(--other); }
-    
-    /* Animations */
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-    
+
     .category-legend {
         text-align: center;
         margin-bottom: 20px;
-        font-size: 0.9rem;
-        color: var(--text-muted);
     }
     .legend-dot {
         display: inline-block;
@@ -182,11 +242,18 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         margin-right: 5px;
         margin-left: 15px;
     }
+
+    /* Animations */
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
     
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-        body { padding: 20px; }
-        h1 { font-size: 2rem; }
+    @media (max-width: 1024px) {
+        .calendar-grid {
+            grid-template-columns: repeat(1, 1fr); /* Stack on mobile */
+        }
+        .day-card {
+            min-height: auto;
+        }
     }
     """
     
@@ -197,15 +264,14 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Meal Plan Dashboard</title>
+        <title>Monthly Meal Calendar</title>
         <style>{css}</style>
     </head>
     <body>
         <div class="container">
             <header>
-                <h1>Weekly Meal Planner</h1>
+                <h1>Monthly Meal Calendar</h1>
                 <p class="subtitle">Delicious, Balanced, Effortless</p>
-                
                 <div class="category-legend">
                     <span class="legend-dot" style="background:var(--protein)"></span>Protein
                     <span class="legend-dot" style="background:var(--egg)"></span>Egg
@@ -214,33 +280,52 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
             </header>
             
             <div class="tabs">
-                <button class="tab-btn active" onclick="openTab('plan')">Meal Schedule</button>
+                <button class="tab-btn active" onclick="openTab('plan')">Calendar View</button>
                 <button class="tab-btn" onclick="openTab('shop')">Shopping List</button>
             </div>
             
             <div id="plan" class="tab-content active">
-                <div class="week-grid">
+                <div class="calendar-grid">
+                    <div class="weekday-header">Sun</div>
+                    <div class="weekday-header">Mon</div>
+                    <div class="weekday-header">Tue</div>
+                    <div class="weekday-header">Wed</div>
+                    <div class="weekday-header">Thu</div>
+                    <div class="weekday-header">Fri</div>
+                    <div class="weekday-header">Sat</div>
     """]
     
-    # Add Day Cards
-    for day in plan:
-        day_num = day['Day']
-        html_content.append(f"""
+    # Loop through grid cells
+    for day in calendar_days:
+        if day is None:
+            # Empty / Padding Day
+            html_content.append('<div class="day-card empty"></div>')
+        else:
+            date_obj = day['Date']
+            date_str = date_obj.strftime("%m/%d")
+            
+            html_content.append(f"""
             <div class="day-card">
-                <div class="day-header">Day {day_num}</div>
+                <div class="date-header">
+                    <span class="date-num">{date_str}</span>
+                </div>
                 
                 <div class="meal-block">
                     <div class="meal-title">Lunch</div>
+                    <div class="dish-list">
                     {''.join([f'<div class="dish-tag dish-{d.category}">{d.name}</div>' for d in day['Lunch_Objects']])}
+                    </div>
                 </div>
                 
                 <div class="meal-block">
                     <div class="meal-title">Dinner</div>
+                    <div class="dish-list">
                     {''.join([f'<div class="dish-tag dish-{d.category}">{d.name}</div>' for d in day['Dinner_Objects']])}
+                    </div>
                 </div>
             </div>
-        """)
-        
+            """)
+            
     html_content.append("""
                 </div>
             </div>
@@ -269,14 +354,9 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         
         <script>
             function openTab(tabName) {
-                // Hide all tabs
                 document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
                 document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-                
-                // Show current
                 document.getElementById(tabName).classList.add('active');
-                
-                // Active btn
                 event.target.classList.add('active');
             }
         </script>
@@ -290,10 +370,7 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         with open(output_file, "w", encoding="utf-8") as f:
             f.write(full_html)
         print(f"HTML Report generated: {output_file}")
-        
-        # Auto-open
         webbrowser.open(f'file://{os.path.abspath(output_file)}')
         
     except Exception as e:
         print(f"Error generating HTML: {e}")
-
