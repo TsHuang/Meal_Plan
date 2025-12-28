@@ -1,0 +1,152 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Meal Plan (A4)</title>
+        <style>
+    @page { 
+        size: A4 landscape;
+        margin: 5mm;
+    }
+    * {
+        box-sizing: border-box;
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #000;
+        background: #fff;
+        margin: 0;
+        padding: 0;
+        font-size: 11px; /* Increased from 10px */
+    }
+    h1 {
+        text-align: center;
+        margin: 5px 0 5px 0;
+        font-size: 18px; /* Larger header */
+    }
+    
+    .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-template-rows: 28px repeat(5, 1fr); /* Header slightly taller */
+        width: 100%;
+        height: 188mm; /* Maximized height for A4 Landscape (210mm - margins) */
+        background-color: #000;
+        gap: 1px;
+        border: 1px solid #000;
+    }
+    
+    /* Cells */
+    .header-cell, .day-cell {
+        background-color: #fff;
+    }
+    
+    .header-cell {
+        background: #f0f0f0;
+        font-weight: bold;
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+    }
+    
+    .day-cell {
+        padding: 4px; /* Slightly more relaxing */
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+    
+    .date-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 3px;
+        font-weight: bold;
+        font-size: 13px; /* Larger Date */
+        border-bottom: 1px solid #eee;
+        padding-bottom: 2px;
+    }
+    
+    .staple {
+        font-weight: bold;
+        color: #000;
+        background: #e0f2fe;
+        padding: 2px 4px;
+        border-radius: 4px;
+        font-size: 11px; /* Larger Staple */
+        margin-bottom: 3px;
+        text-align: center;
+        display: block;
+    }
+    
+    .dish-list {
+        display: flex;
+        flex-direction: column;
+        gap: 2px; /* Standard gap */
+        justify-content: space-evenly; /* Spread out */
+        flex-grow: 1;
+    }
+    .dish {
+        padding: 1px 4px;
+        border-radius: 2px;
+        border: 1px solid #ddd;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 11px; /* Larger Dish Font */
+        line-height: 1.3;
+        font-weight: 500;
+    }
+    .dish-Protein { background: #fee2e2; }
+    .dish-Egg { background: #fef3c7; }
+    .dish-Vegetable { background: #dcfce7; }
+    .dish-Other { background: #f3e8ff; }
+    
+    /* Print tweaks */
+    @media print {
+        body { -webkit-print-color-adjust: exact; }
+    }
+    </style>
+    </head>
+    <body>
+        <h1>📅 Monthly Meal Plan (Mon-Fri)</h1>
+        
+        <div class="calendar-grid">
+            <div class="header-cell">Mon</div>
+            <div class="header-cell">Tue</div>
+            <div class="header-cell">Wed</div>
+            <div class="header-cell">Thu</div>
+            <div class="header-cell">Fri</div>
+    
+<div class="day-cell" style="background:#fafafa;"></div>
+<div class="day-cell" style="background:#fafafa;"></div>
+<div class="day-cell" style="background:#fafafa;"></div>
+<div class="day-cell"><div class="date-row"><span>01/01</span></div><div class="staple">麵</div><div class="dish-list"><div class="dish dish-Protein">蒜末炒吻仔魚</div><div class="dish dish-Vegetable">地瓜葉</div><div class="dish dish-Egg">荷包蛋</div><div class="dish dish-Protein">大比目魚（加薑、蔥、鹽）</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/02</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">蒜末炒吻仔魚</div><div class="dish dish-Vegetable">櫛瓜</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div><div class="dish dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/05</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">虱目魚（加鹽、薑）</div><div class="dish dish-Vegetable">高麗菜</div><div class="dish dish-Other">金針菇（加醬油）</div><div class="dish dish-Other">煎豆腐</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/06</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish dish-Vegetable">娃娃菜</div><div class="dish dish-Other">金針菇（加醬油）</div><div class="dish dish-Other">炒干貝</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/07</span></div><div class="staple">番茄牛肉飯</div><div class="dish-list"><div class="dish dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish dish-Vegetable">青花菜</div><div class="dish dish-Egg">荷包蛋</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/08</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish dish-Vegetable">高麗菜</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div><div class="dish dish-Vegetable">蒸玉米</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/09</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">蒜末炒吻仔魚</div><div class="dish dish-Vegetable">地瓜葉</div><div class="dish dish-Egg">荷包蛋</div><div class="dish dish-Vegetable">蒸皎白筍4支</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/12</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">蒜末炒吻仔魚</div><div class="dish dish-Vegetable">娃娃菜</div><div class="dish dish-Other">炒干貝</div><div class="dish dish-Other">茄子</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/13</span></div><div class="staple">番茄牛肉飯</div><div class="dish-list"><div class="dish dish-Protein">虱目魚（加鹽、薑）</div><div class="dish dish-Vegetable">高麗菜</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/14</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish dish-Vegetable">蒸皎白筍4支</div><div class="dish dish-Other">炒干貝</div><div class="dish dish-Other">鴻禧菇</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/15</span></div><div class="staple">麵</div><div class="dish-list"><div class="dish dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish dish-Vegetable">高麗菜</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div><div class="dish dish-Vegetable">地瓜葉</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/16</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish dish-Vegetable">青花菜</div><div class="dish dish-Egg">荷包蛋</div><div class="dish dish-Vegetable">蒸皎白筍4支</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/19</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish dish-Vegetable">地瓜葉</div><div class="dish dish-Egg">荷包蛋</div><div class="dish dish-Vegetable">櫛瓜</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/20</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish dish-Vegetable">白花椰菜</div><div class="dish dish-Egg">荷包蛋</div><div class="dish dish-Vegetable">娃娃菜</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/21</span></div><div class="staple">咖哩飯</div><div class="dish-list"><div class="dish dish-Protein">虱目魚（加鹽、薑）</div><div class="dish dish-Vegetable">蒸玉米</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/22</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">虱目魚（加鹽、薑）</div><div class="dish dish-Vegetable">地瓜葉</div><div class="dish dish-Other">金針菇（加醬油）</div><div class="dish dish-Other">炒干貝</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/23</span></div><div class="staple">飯</div><div class="dish-list"><div class="dish dish-Protein">蒜末炒吻仔魚</div><div class="dish dish-Vegetable">青花菜</div><div class="dish dish-Other">茄子</div><div class="dish dish-Other">金針菇（加醬油）</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/26</span></div><div class="staple">咖哩飯</div><div class="dish-list"><div class="dish dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish dish-Vegetable">蒸玉米</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/27</span></div><div class="staple">番茄牛肉飯</div><div class="dish-list"><div class="dish dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish dish-Vegetable">櫛瓜</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div></div></div>
+<div class="day-cell"><div class="date-row"><span>01/28</span></div><div class="staple">番茄牛肉飯</div><div class="dish-list"><div class="dish dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish dish-Vegetable">蒸皎白筍4支</div><div class="dish dish-Egg">紅蘿蔔炒蛋</div></div></div>
+<div class="day-cell" style="background:#fafafa;"></div>
+<div class="day-cell" style="background:#fafafa;"></div>
+
+        </div>
+    </body>
+    </html>
+    

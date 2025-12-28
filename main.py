@@ -2,7 +2,7 @@ import argparse
 import sys
 import os
 from planner import load_dishes_from_csv, MealPlanner, save_plan_to_csv, save_shopping_list
-from html_reporter import generate_html_report
+from html_reporter import generate_html_report, generate_mobile_report, generate_mobile_shopping_list, generate_print_html
 
 def main():
     parser = argparse.ArgumentParser(description="Weekly Meal Planner & Shopping List Generator")
@@ -50,8 +50,18 @@ def main():
     shopping = planner.aggregate_ingredients(plan)
     save_shopping_list(shopping, args.output_shop)
     
-    print("Generating Web Report...")
+    print("Generating Web Reports...")
     generate_html_report(plan, shopping, args.output_html)
+    generate_mobile_report(plan, shopping, "meal_plan_mobile.html")
+    generate_mobile_shopping_list(shopping, "shopping_list_mobile.html")
+    generate_print_html(plan, "meal_plan_a4.html")
+    
+    # Auto-open
+    try:
+        webbrowser.open('file://' + os.path.realpath(args.output_html))
+        # webbrowser.open('file://' + os.path.realpath("meal_plan_mobile.html")) # Optional
+    except:
+        pass
     
     print("\nSuccess! Files generated:")
     print(f" - Web Report: {os.path.abspath(args.output_html)}")
