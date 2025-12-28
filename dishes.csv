@@ -4,8 +4,8 @@ Dish Name,Category,Ingredients
 炒牛肉（加洋蔥、醬油膏）,Protein,牛小排
 煎豆腐,Other,豆腐
 鴻禧菇,Other,鴻禧菇
-咖哩飯,Combo,"馬鈴薯, 蘋果, 洋蔥, 咖哩塊, 紅蘿蔔, 雞肉或牛小排"
-雞湯麵,Combo,"雞肉, 香菇, 蒜頭"
+咖哩飯,Combo (Rice),"馬鈴薯, 蘋果, 洋蔥, 咖哩塊, 紅蘿蔔, 雞肉或牛小排"
+雞湯麵,Combo (Noodle),"雞肉, 香菇, 蒜頭, 麵"
 大比目魚（加薑、蔥、鹽）,Protein,大比目魚
 炒腐竹,Other,腐竹
 紅蘿蔔炒蛋,Egg,"雞蛋, 紅蘿蔔"
@@ -27,4 +27,6 @@ Dish Name,Category,Ingredients
 綠色葉菜,Vegetable,綠色葉菜
 茄子,Other,茄子
 金針菇（加醬油）,Other,金針菇
-番茄牛肉,Combo,番茄、牛小排、洋蔥、馬鈴薯
+番茄牛肉飯,Combo (Rice),"番茄, 牛小排, 洋蔥, 馬鈴薯"
+飯,Rice,
+麵,Noodle,麵

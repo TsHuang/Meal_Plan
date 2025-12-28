@@ -15,7 +15,8 @@
         --accent-glow: rgba(56, 189, 248, 0.3);
         --protein: #fca5a5;
         --egg: #fde047;
-        --other: #86efac;
+        --vegetable: #86efac;
+        --other: #c084fc;
         --border: rgba(255,255,255,0.08);
     }
     body {
@@ -105,21 +106,49 @@
         min-height: 200px;
         display: flex;
         flex-direction: column;
+        position: relative;
     }
-    .day-card.empty {
-        background: transparent;
-        border: none;
+    /* Header & Rules */
+    .rules-container {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--text-muted);
     }
-    
+    .rules-container h3 {
+        color: var(--text-main);
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    .rules-container ul {
+        margin: 0;
+        padding-left: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .rules-container li {
+        margin-bottom: 4px;
+    }
+
     .date-header {
         font-size: 1.1rem;
         font-weight: 700;
-        margin-bottom: 10px;
+        margin-bottom: 8px; /* Reduce bottom margin since badge is next */
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid var(--border);
         padding-bottom: 8px;
+    }
+    .date-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
     .date-num {
         color: var(--text-main);
@@ -127,6 +156,25 @@
     .date-weekday {
         font-size: 0.8rem;
         color: var(--text-muted);
+        font-weight: normal;
+    }
+    .staple-row {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    }
+    .staple-badge {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--accent);
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        display: inline-block;
+        width: 100%; /* Make it span/fill for uniform look? Or just inline-block */
+        text-align: center;
+        box-sizing: border-box;
     }
     
     .meal-block {
@@ -159,9 +207,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .dish-Protein { border-left-color: var(--protein); }
-    .dish-Egg { border-left-color: var(--egg); }
-    .dish-Other { border-left-color: var(--other); }
+    .dish-Protein { border-left-color: var(--protein); color: var(--protein); }
+    .dish-Egg { border-left-color: var(--egg); color: var(--egg); }
+    .dish-Vegetable { border-left-color: var(--vegetable); color: var(--vegetable); }
+    .dish-Other { border-left-color: var(--other); color: var(--other); }
     
     /* Shopping List Styles */
     .shop-week {
@@ -231,13 +280,20 @@
         <div class="container">
             <header>
                 <h1>Monthly Meal Calendar</h1>
-                <p class="subtitle">Delicious, Balanced, Effortless</p>
-                <div class="category-legend">
-                    <span class="legend-dot" style="background:var(--protein)"></span>Protein
-                    <span class="legend-dot" style="background:var(--egg)"></span>Egg
-                    <span class="legend-dot" style="background:var(--other)"></span>Other
-                </div>
+                <p class="subtitle">Weekly Dinner Plan (Mon-Fri) & Shopping Assistant</p>
             </header>
+
+            <div class="rules-container">
+                <h3>🍱 Planning Rules</h3>
+                <ul>
+                    <li><strong>Schedule:</strong> Dinner Only (Mon-Fri). Weekends excluded.</li>
+                    <li><strong>Egg Days (3/week):</strong> 1 Protein + 1 Veg + 1 Egg.</li>
+                    <li><strong>Non-Egg Days (2/week):</strong> 1 Protein + 1 Veg + 2 Other (Requires Rice/Noodle).</li>
+                    <li><strong>Staples:</strong> Rice/Noodle/Combo. Noodle max once every 14 days.</li>
+                    <li><strong>Combo Meals:</strong> Served with 3 side dishes.</li>
+                    <li><strong>Normal Meals:</strong> Served with 4 side dishes.</li>
+                </ul>
+            </div>
             
             <div class="tabs">
                 <button class="tab-btn active" onclick="openTab('plan')">Calendar View</button>
@@ -254,566 +310,450 @@
                     <div class="weekday-header">Fri</div>
                     <div class="weekday-header">Sat</div>
     <div class="day-card empty"></div><div class="day-card empty"></div><div class="day-card empty"></div><div class="day-card empty"></div>
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/01</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/01</span>
+                            <span class="date-weekday">Thu</span>
+                        </div>
+                    </div>
+                    <div class="staple-row">
+                        <div class="staple-badge">雞湯麵</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Vegetable">青花菜</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Vegetable">地瓜葉</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/02</span>
+                            <span class="date-weekday">Fri</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/02</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">煎豆腐</div><div class="dish-tag dish-Combo">咖哩飯</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">番茄牛肉</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Vegetable">櫛瓜</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/03</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Vegetable">蒸玉米</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Vegetable">絲瓜蛤蜊</div><div class="dish-tag dish-Egg">荷包蛋</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Vegetable">櫛瓜</div>
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/03</span>
+                        <span class="date-weekday">Sat</span>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/04</span>
+                    <div class="free-day-content">No Meal Plan</div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div>
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/04</span>
+                        <span class="date-weekday">Sun</span>
                     </div>
+                    <div class="free-day-content">No Meal Plan</div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Vegetable">高麗菜</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/05</span>
+                            <span class="date-weekday">Mon</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/05</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Combo">雞湯麵</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Vegetable">地瓜葉</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Other">炒腐竹</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Egg, Protein">蝦子炒蛋</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/06</span>
+                            <span class="date-weekday">Tue</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/06</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">煎豆腐</div><div class="dish-tag dish-Vegetable">櫛瓜</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">番茄牛肉</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Vegetable">青花菜</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/07</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Vegetable">青花菜</div><div class="dish-tag dish-Egg">荷包蛋</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Combo">番茄牛肉</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/07</span>
+                            <span class="date-weekday">Wed</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/08</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/09</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Combo">番茄牛肉</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Vegetable">青花菜</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Vegetable">四季豆或長豆</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Combo">咖哩飯</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/08</span>
+                            <span class="date-weekday">Thu</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/10</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Egg">荷包蛋</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">番茄牛肉</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Combo">雞湯麵</div><div class="dish-tag dish-Vegetable">蒸皎白筍4支</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/11</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Other">茄子</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Vegetable">地瓜葉</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Other">炒腐竹</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/09</span>
+                            <span class="date-weekday">Fri</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/12</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Other">鴻禧菇</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Combo">咖哩飯</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/13</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Other">金針菇（加醬油）</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Vegetable">綠色葉菜</div><div class="dish-tag dish-Other">煎豆腐</div><div class="dish-tag dish-Other">炒干貝</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Vegetable">四季豆或長豆</div>
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/10</span>
+                        <span class="date-weekday">Sat</span>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/14</span>
+                    <div class="free-day-content">No Meal Plan</div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Vegetable">綠色葉菜</div>
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/11</span>
+                        <span class="date-weekday">Sun</span>
                     </div>
+                    <div class="free-day-content">No Meal Plan</div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Vegetable">蒸玉米</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/12</span>
+                            <span class="date-weekday">Mon</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/15</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Vegetable">青花菜</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">咖哩飯</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Vegetable">櫛瓜</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/13</span>
+                            <span class="date-weekday">Tue</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/16</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">煎豆腐</div><div class="dish-tag dish-Egg">荷包蛋</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Vegetable">櫛瓜</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/17</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Combo">咖哩飯</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Vegetable">高麗菜</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Vegetable">地瓜葉</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/14</span>
+                            <span class="date-weekday">Wed</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/18</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Other">炒干貝</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">番茄牛肉</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Vegetable">四季豆或長豆</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/19</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Vegetable">地瓜葉</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Vegetable">櫛瓜</div><div class="dish-tag dish-Egg">荷包蛋</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Other">金針菇（加醬油）</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/15</span>
+                            <span class="date-weekday">Thu</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/20</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Vegetable">地瓜葉</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">麵</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Soup">薑絲蛤蜊湯</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/21</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Other">煎豆腐</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Vegetable">蒸玉米</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Other">鴻禧菇</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/16</span>
+                            <span class="date-weekday">Fri</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/22</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Other">炒干貝</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">煎豆腐</div><div class="dish-tag dish-Vegetable">絲瓜蛤蜊</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/23</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Egg, Protein">蝦子炒蛋</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Vegetable">綠色葉菜</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Other">炒干貝</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Combo">咖哩飯</div>
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/17</span>
+                        <span class="date-weekday">Sat</span>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/24</span>
+                    <div class="free-day-content">No Meal Plan</div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Vegetable">櫛瓜</div>
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/18</span>
+                        <span class="date-weekday">Sun</span>
                     </div>
+                    <div class="free-day-content">No Meal Plan</div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">煎豆腐</div><div class="dish-tag dish-Soup">薑絲蛤蜊湯</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/19</span>
+                            <span class="date-weekday">Mon</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/25</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Egg, Protein">蝦子炒蛋</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Vegetable">高麗菜</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Other">茄子</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Vegetable">青花菜</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/20</span>
+                            <span class="date-weekday">Tue</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/26</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Vegetable">櫛瓜</div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
                     </div>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">炒腐竹</div><div class="dish-tag dish-Combo">雞湯麵</div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/27</span>
-                </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">茄子</div><div class="dish-tag dish-Combo">番茄牛肉</div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Vegetable">地瓜葉</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Vegetable">蒸皎白筍4支</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">鴻禧菇</div><div class="dish-tag dish-Other">金針菇（加醬油）</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/21</span>
+                            <span class="date-weekday">Wed</span>
+                        </div>
                     </div>
-                </div>
-            </div>
-            
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">01/28</span>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Vegetable">青花菜</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Other">鴻禧菇</div>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">蒜末炒吻仔魚</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Other">炒干貝</div><div class="dish-tag dish-Other">鴻禧菇</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/22</span>
+                            <span class="date-weekday">Thu</span>
+                        </div>
+                    </div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Vegetable">櫛瓜</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Vegetable">蒸玉米</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    <div class="dish-tag dish-Protein">大比目魚（加薑、蔥、鹽）</div><div class="dish-tag dish-Egg">荷包蛋</div><div class="dish-tag dish-Other">金針菇（加醬油）</div><div class="dish-tag dish-Vegetable">絲瓜蛤蜊</div>
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/23</span>
+                            <span class="date-weekday">Fri</span>
+                        </div>
+                    </div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Vegetable">高麗菜</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Vegetable">娃娃菜</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            
+                
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/24</span>
+                        <span class="date-weekday">Sat</span>
+                    </div>
+                    <div class="free-day-content">No Meal Plan</div>
+                </div>
+                
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">01/25</span>
+                        <span class="date-weekday">Sun</span>
+                    </div>
+                    <div class="free-day-content">No Meal Plan</div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/26</span>
+                            <span class="date-weekday">Mon</span>
+                        </div>
+                    </div>
+                    <div class="staple-row">
+                        <div class="staple-badge">番茄牛肉</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">鮭魚（加洋蔥、黑胡椒、鹽）</div><div class="dish-tag dish-Vegetable">地瓜葉</div><div class="dish-tag dish-Egg">荷包蛋</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/27</span>
+                            <span class="date-weekday">Tue</span>
+                        </div>
+                    </div>
+                    <div class="staple-row">
+                        <div class="staple-badge">番茄牛肉</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">炒牛肉（加洋蔥、醬油膏）</div><div class="dish-tag dish-Vegetable">櫛瓜</div><div class="dish-tag dish-Egg">荷包蛋</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">01/28</span>
+                            <span class="date-weekday">Wed</span>
+                        </div>
+                    </div>
+                    <div class="staple-row">
+                        <div class="staple-badge">飯</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        <div class="dish-tag dish-Protein">虱目魚（加鹽、薑）</div><div class="dish-tag dish-Vegetable">蒸皎白筍4支</div><div class="dish-tag dish-Egg">紅蘿蔔炒蛋</div><div class="dish-tag dish-Vegetable">娃娃菜</div>
+                        </div>
+                    </div>
+                </div>
+                
                 </div>
             </div>
             
@@ -822,28 +762,28 @@
             <div class="shop-week">
                 <h3>Week 1</h3>
                 <ul class="shop-list">
-        <li class="shop-item"><span>咖哩塊</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>地瓜葉</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>大比目魚</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>干貝</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>櫛瓜</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>洋蔥</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>牛小排</span> <span class="shop-count">x5</span></li><li class="shop-item"><span>玉米</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>番茄、牛小排、洋蔥、馬鈴薯</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>紅蘿蔔</span> <span class="shop-count">x8</span></li><li class="shop-item"><span>腐竹</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>茄子</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>蒜頭</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>蘋果</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>蝦子</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>豆腐</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>金針菇</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>雞肉</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞肉或牛小排</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x15</span></li><li class="shop-item"><span>青花菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>香菇</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>馬鈴薯</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>高麗菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>鮭魚</span> <span class="shop-count">x7</span></li><li class="shop-item"><span>鴻禧菇</span> <span class="shop-count">x3</span></li>
+        <li class="shop-item"><span>吻仔魚</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>四季豆或長豆</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>地瓜葉</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>牛小排</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>紅蘿蔔</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>絲瓜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>腐竹</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>茄子</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>蛤蜊</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>青花菜</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>鮭魚</span> <span class="shop-count">x1</span></li>
                 </ul>
             </div>
         
             <div class="shop-week">
                 <h3>Week 2</h3>
                 <ul class="shop-list">
-        <li class="shop-item"><span>吻仔魚</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>咖哩塊</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>四季豆或長豆</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>大比目魚</span> <span class="shop-count">x5</span></li><li class="shop-item"><span>干貝</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>洋蔥</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>牛小排</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>玉米</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>番茄、牛小排、洋蔥、馬鈴薯</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>皎白筍</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>紅蘿蔔</span> <span class="shop-count">x9</span></li><li class="shop-item"><span>綠色葉菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>腐竹</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>茄子</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>蒜頭</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>蘋果</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>金針菇</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>雞肉</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞肉或牛小排</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x14</span></li><li class="shop-item"><span>香菇</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>馬鈴薯</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>鮭魚</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>鴻禧菇</span> <span class="shop-count">x4</span></li>
+        <li class="shop-item"><span>吻仔魚</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>地瓜葉</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>大比目魚</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>干貝</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>櫛瓜</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>紅蘿蔔</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>綠色葉菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>豆腐</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>高麗菜</span> <span class="shop-count">x1</span></li>
                 </ul>
             </div>
         
             <div class="shop-week">
                 <h3>Week 3</h3>
                 <ul class="shop-list">
-        <li class="shop-item"><span>吻仔魚</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>咖哩塊</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>四季豆或長豆</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>地瓜葉</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>大比目魚</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>干貝</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>櫛瓜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>洋蔥</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>牛小排</span> <span class="shop-count">x5</span></li><li class="shop-item"><span>紅蘿蔔</span> <span class="shop-count">x8</span></li><li class="shop-item"><span>腐竹</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>茄子</span> <span class="shop-count">x5</span></li><li class="shop-item"><span>蘋果</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>蛤蜊</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>豆腐</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>金針菇</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>雞肉或牛小排</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x14</span></li><li class="shop-item"><span>青花菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>馬鈴薯</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>鮭魚</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>鴻禧菇</span> <span class="shop-count">x2</span></li>
+        <li class="shop-item"><span>吻仔魚</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>地瓜葉</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>干貝</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>牛小排</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>玉米</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>皎白筍</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>綠色葉菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>茄子</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>金針菇</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>青花菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>高麗菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>鴻禧菇</span> <span class="shop-count">x3</span></li>
                 </ul>
             </div>
         
             <div class="shop-week">
                 <h3>Week 4</h3>
                 <ul class="shop-list">
-        <li class="shop-item"><span>吻仔魚</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>咖哩塊</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>大比目魚</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>干貝</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>櫛瓜</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>洋蔥</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>牛小排</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>番茄、牛小排、洋蔥、馬鈴薯</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>紅蘿蔔</span> <span class="shop-count">x8</span></li><li class="shop-item"><span>絲瓜</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>腐竹</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>茄子</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>蒜頭</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>蘋果</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>蛤蜊</span> <span class="shop-count">x3</span></li><li class="shop-item"><span>蝦子</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>豆腐</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>金針菇</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>雞肉</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞肉或牛小排</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x16</span></li><li class="shop-item"><span>青花菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>香菇</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>馬鈴薯</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>鮭魚</span> <span class="shop-count">x4</span></li><li class="shop-item"><span>鴻禧菇</span> <span class="shop-count">x3</span></li>
+        <li class="shop-item"><span>地瓜葉</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>娃娃菜</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>櫛瓜</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>牛小排</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>玉米</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>皎白筍</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>紅蘿蔔</span> <span class="shop-count">x2</span></li><li class="shop-item"><span>虱目魚</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>雞蛋</span> <span class="shop-count">x5</span></li><li class="shop-item"><span>高麗菜</span> <span class="shop-count">x1</span></li><li class="shop-item"><span>鮭魚</span> <span class="shop-count">x2</span></li>
                 </ul>
             </div>
         

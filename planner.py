@@ -20,10 +20,14 @@ class MealPlanner:
             self.by_category[d.category].append(d)
         
         # Verify we have enough data
-        self.categories = ['Protein', 'Egg', 'Other']
+        self.categories = ['Protein', 'Egg', 'Vegetable', 'Other']
         for cat in self.categories:
             if not self.by_category[cat]:
                 print(f"Warning: No dishes found for category '{cat}'")
+                
+        # Staple Logic
+        self.staples = ['Rice', 'Noodle', 'Combo (Rice)', 'Combo (Noodle)']
+        self.last_noodle_date = None # Track last date noodles were used
 
     def generate_meal(self, n=4):
         """
@@ -62,23 +66,103 @@ class MealPlanner:
             
         return meal
 
-    def generate_day(self):
-        # Generate Lunch and Dinner
-        # Constraint: Daily must have Protein, Egg, Other.
-        # Since our generate_meal tries to include all 3, this is likely satisfied.
-        # We also want to avoid repeating dishes between Lunch and Dinner on the same day.
+    def get_daily_staple(self, current_date, is_egg_day):
+        import datetime
         
-        lunch = self.generate_meal(4)
+        # Determine available options
+        options = []
         
-        # Filter out lunch dishes for dinner to ensure daily variety
-        dinner_pool = [d for d in self.dishes if d not in lunch]
+        # Check noodle constraint (once every 14 days)
+        can_have_noodle = False
+        if self.last_noodle_date is None:
+            can_have_noodle = True
+        elif (current_date - self.last_noodle_date).days >= 14:
+            can_have_noodle = True
+            
+        # Filter Staples
+        # On Non-Egg days, we force FORCE normal staples (Rice/Noodle) because we need 4 slots.
+        # (User rule: Non-Egg = P + V + 2Other = 4 dishes). 
+        # Combo only allows 3 dishes, so Combo is incompatible with Non-Egg day.
         
-        # Custom generate for dinner using filtered pool
-        dinner = []
-        temp_planner = MealPlanner(dinner_pool) # Create a temp planner with reduced pool
-        dinner = temp_planner.generate_meal(4)
+        allowed_types = self.staples[:]
+        if not is_egg_day:
+            # Must be Normal
+            allowed_types = [s for s in allowed_types if 'Combo' not in s]
         
-        return lunch, dinner
+        if can_have_noodle:
+            options = allowed_types
+        else:
+            # Filter out Noodle types
+            options = [s for s in allowed_types if 'Noodle' not in s]
+            
+        # Select one
+        if not options:
+            # Fallback if over-constrained (shouldn't happen with Rice)
+            return 'Rice'
+            
+        selected = random.choice(options)
+        
+        # Update tracker
+        if 'Noodle' in selected:
+            self.last_noodle_date = current_date
+            
+        return selected
+
+    def generate_dinner(self, staple, is_egg_day):
+        # Determine dish count based on Staple
+        # Combo -> 3 dishes
+        # Normal -> 4 dishes
+        n_dishes = 4
+        if 'Combo' in staple:
+            n_dishes = 3
+            
+        # Strict Composition Rules
+        # Egg Day (3/week): 1 Protein + 1 Veg + 1 Egg (+1 Random if n=4)
+        # Non-Egg Day (2/week): 1 Protein + 1 Veg + 2 Other (Total 4) -> Must be Normal staple
+        
+        meal = []
+        
+        # 1. Mandatory Protein
+        p_options = self.by_category['Protein']
+        if p_options:
+            meal.append(random.choice(p_options))
+            
+        # 2. Mandatory Vegetable (User said "Vegetable", distinct from Other)
+        v_options = self.by_category['Vegetable']
+        if v_options:
+            meal.append(random.choice(v_options))
+            
+        # 3. Conditional Rules
+        if is_egg_day:
+            # Must have Egg
+            e_options = self.by_category['Egg']
+            if e_options:
+                meal.append(random.choice(e_options))
+        else:
+            # Non-Egg Day -> 2 Others
+            # We already used 2 slots (P+V). We need 2 Others. 
+            o_options = self.by_category['Other']
+            # Pick 2 distinct if possible
+            if len(o_options) >= 2:
+                meal.extend(random.sample(o_options, 2))
+            else:
+                # Fallback if not enough other
+                meal.extend(o_options)
+        
+        # 4. Fill Remaining Slots (if any)
+        # For Egg Day with Normal Staple (n=4), we have P+V+E (3 items). Need 1 more.
+        # For Non-Egg Day with Normal Staple (n=4), we have P+V+2O (4 items). Full.
+        
+        while len(meal) < n_dishes:
+            # Pick random from Protein or Vegetable (avoid egg if strict non-egg, avoid too many others)
+            pool = self.by_category['Protein'] + self.by_category['Vegetable']
+            remaining_pool = [d for d in pool if d not in meal]
+            if remaining_pool:
+                meal.append(random.choice(remaining_pool))
+            else:
+                break
+                
+        return meal
 
     def generate_month_plan(self, days=28, start_date=None):
         import datetime
@@ -87,9 +171,94 @@ class MealPlanner:
             start_date = datetime.date.today()
             
         plan = []
+        
+        # We process week by week to enforce the "3 Egg Days per Week" rule
+        # A week is defined as Mon-Sun? Or just chunks of 5 weekdays?
+        # Let's assume chunks of 5 weekdays for the "per week" rule.
+        
+        # But generate_month_plan iterates day by day.
+        # We can pre-calculate egg status.
+        
+        # Create a map for dates
+        egg_schedule = {} # date_str -> bool
+        
+        current_processing_date = start_date
+        total_processed = 0
+        while total_processed < days:
+             # Find the Monday of the current week (or just current chunk)
+             # Actually, simpler: verify if it's a weekday.
+             # If we want "One week has 3 egg days", we should look at ISO weeks or just rolling 5 days.
+             # Let's do ISO weeks (Mon-Sun).
+             
+             year, week, weekday = current_processing_date.isocalendar()
+             week_key = (year, week)
+             
+             # If we haven't planned this week yet
+             # Get all weekdays for this week
+             week_start = current_processing_date - datetime.timedelta(days=weekday-1)
+             week_days = []
+             for i in range(5): # Mon(0) to Fri(4)
+                 d = week_start + datetime.timedelta(days=i)
+                 if d >= start_date:
+                     week_days.append(d)
+             
+             # Randomly pick 3 days to be Egg Days (if we have enough days)
+             # If we have fewer than 3 days in this partial week, make them all egg days?
+             count = len(week_days)
+             egg_count = min(3, count)
+             
+             # If full week (5 days), picked 3.
+             # We need to be careful not to re-plan.
+             
+             # Let's just iterate through the requested duration.
+             # When we hit a Monday (or start), plan the whole week's egg schedule?
+             pass 
+             total_processed += 1 # Just loop logic holder
+             current_processing_date += datetime.timedelta(days=1)
+
+        # Better approach: Iterate days, group by Week
+        from collections import defaultdict
+        week_groups = defaultdict(list)
+        
+        for day_num in range(days):
+            d = start_date + datetime.timedelta(days=day_num)
+            if d.weekday() < 5: # Mon-Fri
+                iso_year, iso_week, _ = d.isocalendar()
+                week_groups[(iso_year, iso_week)].append(d)
+        
+        # Assign egg days
+        egg_flags = {}
+        for wk, dates in week_groups.items():
+            # Pick 3 days to be Egg
+            k = min(3, len(dates))
+            egg_dates = set(random.sample(dates, k))
+            for d in dates:
+                egg_flags[d] = (d in egg_dates)
+        
+        # Generate Logic
         for day_num in range(days):
             current_date = start_date + datetime.timedelta(days=day_num)
-            lunch, dinner = self.generate_day()
+            
+            # Weekday check: 0=Mon, 4=Fri, 5=Sat, 6=Sun
+            if current_date.weekday() >= 5:
+                # Weekend - No meals
+                dinner = []
+                daily_staple = "None"
+            else:
+                is_egg = egg_flags.get(current_date, False)
+                daily_staple_cat = self.get_daily_staple(current_date, is_egg)
+                
+                # Always pick a specific dish name from the category
+                # This covers Rice, Noodle, Combo (Rice), Combo (Noodle)
+                staple_dishes = self.by_category.get(daily_staple_cat, [])
+                if staple_dishes:
+                    selected_staple = random.choice(staple_dishes)
+                    daily_staple_display = selected_staple.name
+                else:
+                    # Fallback if no specific dishes defined for this category
+                    daily_staple_display = daily_staple_cat
+
+                dinner = self.generate_dinner(daily_staple_cat, is_egg)
             
             # Record the day's plan
             day_data = {
@@ -97,9 +266,8 @@ class MealPlanner:
                 'Date': current_date, # Date object
                 'DateStr': current_date.strftime("%Y-%m-%d"),
                 'Weekday': current_date.strftime("%a"), # Mon, Tue...
-                'Lunch': [d.name for d in lunch],
+                'Staple': daily_staple_display,
                 'Dinner': [d.name for d in dinner],
-                'Lunch_Objects': lunch,
                 'Dinner_Objects': dinner
             }
             plan.append(day_data)
@@ -115,7 +283,7 @@ class MealPlanner:
             if week_num not in shopping_lists:
                 shopping_lists[week_num] = Counter()
             
-            all_dishes = day['Lunch_Objects'] + day['Dinner_Objects']
+            all_dishes = day['Dinner_Objects']
             for dish in all_dishes:
                 for ing in dish.ingredients:
                     shopping_lists[week_num][ing] += 1
@@ -145,23 +313,13 @@ def save_plan_to_csv(plan, filename="meal_plan.csv"):
     # Day, Meal, Dish 1, Dish 2, Dish 3, Dish 4
     rows = []
     for day in plan:
-        # Lunch
-        row_l = {
-            'Day': day['Day'], 
-            'Date': day['DateStr'], 
-            'Weekday': day['Weekday'], 
-            'Meal': 'Lunch'
-        }
-        for i, d in enumerate(day['Lunch']):
-            row_l[f'Dish {i+1}'] = d
-        rows.append(row_l)
-        
-        # Dinner
+        # Dinner Only
         row_d = {
             'Day': day['Day'], 
             'Date': day['DateStr'], 
             'Weekday': day['Weekday'], 
-            'Meal': 'Dinner'
+            'Staple': day['Staple'],
+            # 'Meal': 'Dinner' # Redundant if only one meal
         }
         for i, d in enumerate(day['Dinner']):
             row_d[f'Dish {i+1}'] = d

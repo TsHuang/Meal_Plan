@@ -45,7 +45,8 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         --accent-glow: rgba(56, 189, 248, 0.3);
         --protein: #fca5a5;
         --egg: #fde047;
-        --other: #86efac;
+        --vegetable: #86efac;
+        --other: #c084fc;
         --border: rgba(255,255,255,0.08);
     }
     body {
@@ -135,21 +136,49 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         min-height: 200px;
         display: flex;
         flex-direction: column;
+        position: relative;
     }
-    .day-card.empty {
-        background: transparent;
-        border: none;
+    /* Header & Rules */
+    .rules-container {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 30px;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: var(--text-muted);
     }
-    
+    .rules-container h3 {
+        color: var(--text-main);
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+    .rules-container ul {
+        margin: 0;
+        padding-left: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+    }
+    .rules-container li {
+        margin-bottom: 4px;
+    }
+
     .date-header {
         font-size: 1.1rem;
         font-weight: 700;
-        margin-bottom: 10px;
+        margin-bottom: 8px; /* Reduce bottom margin since badge is next */
         display: flex;
         justify-content: space-between;
         align-items: center;
         border-bottom: 1px solid var(--border);
         padding-bottom: 8px;
+    }
+    .date-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
     .date-num {
         color: var(--text-main);
@@ -157,6 +186,25 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
     .date-weekday {
         font-size: 0.8rem;
         color: var(--text-muted);
+        font-weight: normal;
+    }
+    .staple-row {
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+    }
+    .staple-badge {
+        background: rgba(56, 189, 248, 0.15);
+        color: var(--accent);
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        display: inline-block;
+        width: 100%; /* Make it span/fill for uniform look? Or just inline-block */
+        text-align: center;
+        box-sizing: border-box;
     }
     
     .meal-block {
@@ -189,9 +237,10 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .dish-Protein { border-left-color: var(--protein); }
-    .dish-Egg { border-left-color: var(--egg); }
-    .dish-Other { border-left-color: var(--other); }
+    .dish-Protein { border-left-color: var(--protein); color: var(--protein); }
+    .dish-Egg { border-left-color: var(--egg); color: var(--egg); }
+    .dish-Vegetable { border-left-color: var(--vegetable); color: var(--vegetable); }
+    .dish-Other { border-left-color: var(--other); color: var(--other); }
     
     /* Shopping List Styles */
     .shop-week {
@@ -271,13 +320,20 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
         <div class="container">
             <header>
                 <h1>Monthly Meal Calendar</h1>
-                <p class="subtitle">Delicious, Balanced, Effortless</p>
-                <div class="category-legend">
-                    <span class="legend-dot" style="background:var(--protein)"></span>Protein
-                    <span class="legend-dot" style="background:var(--egg)"></span>Egg
-                    <span class="legend-dot" style="background:var(--other)"></span>Other
-                </div>
+                <p class="subtitle">Weekly Dinner Plan (Mon-Fri) & Shopping Assistant</p>
             </header>
+
+            <div class="rules-container">
+                <h3>🍱 Planning Rules</h3>
+                <ul>
+                    <li><strong>Schedule:</strong> Dinner Only (Mon-Fri). Weekends excluded.</li>
+                    <li><strong>Egg Days (3/week):</strong> 1 Protein + 1 Veg + 1 Egg.</li>
+                    <li><strong>Non-Egg Days (2/week):</strong> 1 Protein + 1 Veg + 2 Other (Requires Rice/Noodle).</li>
+                    <li><strong>Staples:</strong> Rice/Noodle/Combo. Noodle max once every 14 days.</li>
+                    <li><strong>Combo Meals:</strong> Served with 3 side dishes.</li>
+                    <li><strong>Normal Meals:</strong> Served with 4 side dishes.</li>
+                </ul>
+            </div>
             
             <div class="tabs">
                 <button class="tab-btn active" onclick="openTab('plan')">Calendar View</button>
@@ -298,33 +354,45 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
     # Loop through grid cells
     for day in calendar_days:
         if day is None:
-            # Empty / Padding Day
+            # Empty / Padding Day (for start of month alignment)
             html_content.append('<div class="day-card empty"></div>')
         else:
             date_obj = day['Date']
             date_str = date_obj.strftime("%m/%d")
+            is_weekend = len(day['Dinner_Objects']) == 0
             
-            html_content.append(f"""
-            <div class="day-card">
-                <div class="date-header">
-                    <span class="date-num">{date_str}</span>
+            if is_weekend:
+                 html_content.append(f"""
+                <div class="day-card weekend">
+                    <div class="date-header">
+                        <span class="date-num">{date_str}</span>
+                        <span class="date-weekday">{day['Weekday']}</span>
+                    </div>
+                    <div class="free-day-content">No Meal Plan</div>
                 </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Lunch</div>
-                    <div class="dish-list">
-                    {''.join([f'<div class="dish-tag dish-{d.category}">{d.name}</div>' for d in day['Lunch_Objects']])}
+                """)
+            else:
+                staple_info = day.get('Staple', '')
+                html_content.append(f"""
+                <div class="day-card">
+                    <div class="date-header">
+                        <div class="date-info">
+                            <span class="date-num">{date_str}</span>
+                            <span class="date-weekday">{day['Weekday']}</span>
+                        </div>
+                    </div>
+                    <div class="staple-row">
+                        <div class="staple-badge">{staple_info}</div>
+                    </div>
+                    
+                    <div class="meal-block">
+                        <!-- <div class="meal-title">Dinner</div> -->
+                        <div class="dish-list">
+                        {''.join([f'<div class="dish-tag dish-{d.category}">{d.name}</div>' for d in day['Dinner_Objects']])}
+                        </div>
                     </div>
                 </div>
-                
-                <div class="meal-block">
-                    <div class="meal-title">Dinner</div>
-                    <div class="dish-list">
-                    {''.join([f'<div class="dish-tag dish-{d.category}">{d.name}</div>' for d in day['Dinner_Objects']])}
-                    </div>
-                </div>
-            </div>
-            """)
+                """)
             
     html_content.append("""
                 </div>
