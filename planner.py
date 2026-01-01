@@ -26,7 +26,7 @@ class MealPlanner:
                 print(f"Warning: No dishes found for category '{cat}'")
                 
         # Staple Logic
-        self.staples = ['Rice', 'Noodle', 'Combo (Rice)', 'Combo (Noodle)']
+        self.staples = ['Rice', 'Combo (Rice)', 'Combo (Noodle)']
         self.last_noodle_date = None # Track last date noodles were used
 
     def generate_meal(self, n=4):
@@ -66,7 +66,7 @@ class MealPlanner:
             
         return meal
 
-    def get_daily_staple(self, current_date, is_egg_day):
+    def get_daily_staple(self, current_date, is_egg_day, last_combo_date=None):
         import datetime
         
         # Determine available options
@@ -88,6 +88,15 @@ class MealPlanner:
         if not is_egg_day:
             # Must be Normal
             allowed_types = [s for s in allowed_types if 'Combo' not in s]
+            
+        if allowed_types: # Optimization
+            days_since_combo = 999
+            if last_combo_date:
+                days_since_combo = (current_date - last_combo_date).days
+                
+            if days_since_combo <= 2:
+                # Disperse rule: At least 2 days gap (e.g. Mon->Thu)
+                allowed_types = [s for s in allowed_types if 'Combo' not in s]
         
         if can_have_noodle:
             options = allowed_types
@@ -108,59 +117,143 @@ class MealPlanner:
             
         return selected
 
-    def generate_dinner(self, staple, is_egg_day):
-        # Determine dish count based on Staple
-        # Combo -> 3 dishes
-        # Normal -> 4 dishes
-        n_dishes = 4
+    def identify_meat_type(self, dish_name):
+        name = dish_name.lower()
+        if '魚' in name and '吻仔魚' not in name: return 'Fish' # Main fish dishes
+        if '吻仔魚' in name: return 'Fish' # Treat as fish
+        if '牛' in name: return 'Beef'
+        if '豬' in name: return 'Pork'
+        if '雞' in name and '雞蛋' not in name and '蛋' not in name: return 'Chicken' # Avoid Egg matches
+        if '雞肉' in name: return 'Chicken'
+        if '蝦' in name: return 'Shrimp'
+        if '蛤蜊' in name: return 'Clam'
+        return None
+
+    def generate_dinner(self, staple, is_egg_day, weekly_used_dishes, weekly_fish_count):
+        # Determine dish count
+        # Combo -> 3 items (Staple + 2 sides)
+        # Normal -> 4 items (Staple + 3 sides - Wait, normal is 4 dishes total including staple?)
+        # Let's check CSV output. Only Side dishes are in 'Dinner_Objects'.
+        # Previous layout: Staple is separate.
+        # Logic: 
+        # Egg Day (Normal): 1P + 1V + 1E. (3 sides).
+        # Non-Egg (Normal): 1P + 1V + 2B. (4 sides).
+        # Combo: "配菜就不安排蛋白質". 
+        #   Egg Day (Combo): 0P + 1V + 1E. (2 sides).
+        #   Non-Egg (Combo): N/A (Combo not allowed).
+        
+        target_sides = 4 # Default for Normal Staple
         if 'Combo' in staple:
-            n_dishes = 3
+            target_sides = 2 # 1V + 1E (Protein excluded, Veg included, Egg included)
             
-        # Strict Composition Rules
-        # Egg Day (3/week): 1 Protein + 1 Veg + 1 Egg (+1 Random if n=4)
-        # Non-Egg Day (2/week): 1 Protein + 1 Veg + 2 Other (Total 4) -> Must be Normal staple
-        
         meal = []
+        daily_meats = set()
         
-        # 1. Mandatory Protein
-        p_options = self.by_category['Protein']
-        if p_options:
-            meal.append(random.choice(p_options))
+        # Helper to pick form list
+        def pick_valid(category, pool, count=1, exclude_meat_types=None):
+            # Filter by weekly used
+            candidates = [d for d in pool if d.name not in weekly_used_dishes and d not in meal]
             
-        # 2. Mandatory Vegetable (User said "Vegetable", distinct from Other)
-        v_options = self.by_category['Vegetable']
-        if v_options:
-            meal.append(random.choice(v_options))
+            # Filter by constraints
+            valid = []
+            for d in candidates:
+                # Vegetable Limit: If we already have a vegetable, don't pick another?
+                # Actually enforcing 1 V per day means we pick V exactly once.
+                
+                # Meat Type Uniqueness
+                m_type = self.identify_meat_type(d.name)
+                
+                # Fish Limit
+                if m_type == 'Fish' and weekly_fish_count >= 2:
+                    continue
+                    
+                # Daily Meat Uniqueness
+                if m_type and m_type in daily_meats:
+                    continue
+                    
+                valid.append(d)
+                
+            if not valid:
+                return []
+                
+            # Pick
+            picked = []
+            if len(valid) >= count:
+                picked = random.sample(valid, count)
+            else:
+                picked = valid # Take what we can
+                
+            for p in picked:
+                m = self.identify_meat_type(p.name)
+                if m: daily_meats.add(m)
+                
+            return picked
+
+        # 1. Vegetable (Strictly 1)
+        v_picked = pick_valid('Vegetable', self.by_category['Vegetable'], 1)
+        meal.extend(v_picked)
+        
+        # 2. Protein
+        # If Combo -> No Protein
+        if 'Combo' not in staple:
+            p_picked = pick_valid('Protein', self.by_category['Protein'], 1)
+            meal.extend(p_picked)
             
-        # 3. Conditional Rules
+        # 3. Egg (if Egg Day)
         if is_egg_day:
-            # Must have Egg
-            e_options = self.by_category['Egg']
-            if e_options:
-                meal.append(random.choice(e_options))
-        else:
-            # Non-Egg Day -> 2 Others
-            # We already used 2 slots (P+V). We need 2 Others. 
-            o_options = self.by_category['Other']
-            # Pick 2 distinct if possible
-            if len(o_options) >= 2:
-                meal.extend(random.sample(o_options, 2))
-            else:
-                # Fallback if not enough other
-                meal.extend(o_options)
+            e_picked = pick_valid('Egg', self.by_category['Egg'], 1)
+            meal.extend(e_picked)
+            
+        # 4. Other
+        # Normal Staple + Egg Day -> Need 1 Other
+        # Normal Staple + Non-Egg -> Need 2 Others
+        if 'Combo' not in staple:
+            needed_others = 1 if is_egg_day else 2
+            o_picked = pick_valid('Other', self.by_category['Other'], needed_others)
+            meal.extend(o_picked)
+            
+        # 5. Fill Remaining (Fallback)
+        # Rules: 
+        # - Max 1 Veg (Already picked 1) -> DO NOT pick Veg.
+        # - No Meat Duplicates.
+        # - No Fish if limit reached.
+        # - No Protein if Combo (User: "配菜就不安排蛋白質". Strict?)
+        #   If User implies "Main dish is combo, so no EXTRA protein side", then yes.
+        #   So filling pool should be 'Other' or 'Egg' (if not egg day? but matched Egg rule).
+        #   Actually, if we are short on dishes, we usually drag from Other?
         
-        # 4. Fill Remaining Slots (if any)
-        # For Egg Day with Normal Staple (n=4), we have P+V+E (3 items). Need 1 more.
-        # For Non-Egg Day with Normal Staple (n=4), we have P+V+2O (4 items). Full.
-        
-        while len(meal) < n_dishes:
-            # Pick random from Protein or Vegetable (avoid egg if strict non-egg, avoid too many others)
-            pool = self.by_category['Protein'] + self.by_category['Vegetable']
-            remaining_pool = [d for d in pool if d not in meal]
-            if remaining_pool:
-                meal.append(random.choice(remaining_pool))
+        while len(meal) < target_sides:
+            # Pool: Other? Can we pick extra Protein? 
+            # If Normal Staple: We have 1P, 1V. If Non-Egg, 2O. (Total 4). Full.
+            # If Egg Day (Normal): 1P, 1V, 1E. (Total 3). Target is 3?
+            # Previous logic said "1P+1V+1E (+1 Random if n=4)". 
+            # Wait, user constraints might imply strictly structured meals.
+            # "每天只會安排一個vegetable類別" -> fixed 1 V.
+            # "當主食為combo, 配菜不安排蛋白質" -> fixed 0 P.
+            # "每天不重複肉類".
+            
+            # If we need to fill:
+            # Can we duplicate categories? 
+            # If we need 4th dish on Egg Day (Normal Staple)?
+            # Maybe we should stick to:
+            # Egg Day: P + V + E + (Other?)
+            # Or is Egg Day just 3 dishes?
+            # Let's assume we fill with 'Other' or 'Protein' (if allowed).
+            
+            pool_cats = ['Other']
+            if 'Combo' not in staple:
+                pool_cats.append('Protein') # Allowed second protein?
+                # User: "每天出現的肉類不會重複" -> implies multiple meat dishes allowed IF types differ.
+                
+            candidates = []
+            for cat in pool_cats:
+                candidates.extend(self.by_category[cat])
+                
+            fillers = pick_valid('Fill', candidates, 1)
+            if fillers:
+                meal.append(fillers[0])
             else:
-                break
+                break # Cannot fill
                 
         return meal
 
@@ -172,105 +265,145 @@ class MealPlanner:
             
         plan = []
         
-        # We process week by week to enforce the "3 Egg Days per Week" rule
-        # A week is defined as Mon-Sun? Or just chunks of 5 weekdays?
-        # Let's assume chunks of 5 weekdays for the "per week" rule.
+        # State tracking
+        current_week = None
+        weekly_used_dishes = set()
+        weekly_fish_count = 0
+        last_combo_date = None
         
-        # But generate_month_plan iterates day by day.
-        # We can pre-calculate egg status.
+        # Holiday List for 2026 (Taiwan)
+        # Assuming manual entry based on user request "Refer to Taiwan Holidays"
+        # Source: Directorate-General of Personnel Administration (approximate)
+        holidays_2026 = set()
         
-        # Create a map for dates
-        egg_schedule = {} # date_str -> bool
-        
-        current_processing_date = start_date
-        total_processed = 0
-        while total_processed < days:
-             # Find the Monday of the current week (or just current chunk)
-             # Actually, simpler: verify if it's a weekday.
-             # If we want "One week has 3 egg days", we should look at ISO weeks or just rolling 5 days.
-             # Let's do ISO weeks (Mon-Sun).
-             
-             year, week, weekday = current_processing_date.isocalendar()
-             week_key = (year, week)
-             
-             # If we haven't planned this week yet
-             # Get all weekdays for this week
-             week_start = current_processing_date - datetime.timedelta(days=weekday-1)
-             week_days = []
-             for i in range(5): # Mon(0) to Fri(4)
-                 d = week_start + datetime.timedelta(days=i)
-                 if d >= start_date:
-                     week_days.append(d)
-             
-             # Randomly pick 3 days to be Egg Days (if we have enough days)
-             # If we have fewer than 3 days in this partial week, make them all egg days?
-             count = len(week_days)
-             egg_count = min(3, count)
-             
-             # If full week (5 days), picked 3.
-             # We need to be careful not to re-plan.
-             
-             # Let's just iterate through the requested duration.
-             # When we hit a Monday (or start), plan the whole week's egg schedule?
-             pass 
-             total_processed += 1 # Just loop logic holder
-             current_processing_date += datetime.timedelta(days=1)
-
-        # Better approach: Iterate days, group by Week
-        from collections import defaultdict
-        week_groups = defaultdict(list)
-        
-        for day_num in range(days):
-            d = start_date + datetime.timedelta(days=day_num)
-            if d.weekday() < 5: # Mon-Fri
-                iso_year, iso_week, _ = d.isocalendar()
-                week_groups[(iso_year, iso_week)].append(d)
-        
-        # Assign egg days
-        egg_flags = {}
-        for wk, dates in week_groups.items():
-            # Pick 3 days to be Egg
-            k = min(3, len(dates))
-            egg_dates = set(random.sample(dates, k))
-            for d in dates:
-                egg_flags[d] = (d in egg_dates)
-        
-        # Generate Logic
-        for day_num in range(days):
-            current_date = start_date + datetime.timedelta(days=day_num)
-            
-            # Weekday check: 0=Mon, 4=Fri, 5=Sat, 6=Sun
-            if current_date.weekday() >= 5:
-                # Weekend - No meals
-                dinner = []
-                daily_staple = "None"
-            else:
-                is_egg = egg_flags.get(current_date, False)
-                daily_staple_cat = self.get_daily_staple(current_date, is_egg)
+        def add_range(start_str, end_str):
+            s = datetime.datetime.strptime(start_str, "%Y-%m-%d").date()
+            e = datetime.datetime.strptime(end_str, "%Y-%m-%d").date()
+            curr = s
+            while curr <= e:
+                holidays_2026.add(curr)
+                curr += datetime.timedelta(days=1)
                 
-                # Always pick a specific dish name from the category
-                # This covers Rice, Noodle, Combo (Rice), Combo (Noodle)
-                staple_dishes = self.by_category.get(daily_staple_cat, [])
-                if staple_dishes:
-                    selected_staple = random.choice(staple_dishes)
-                    daily_staple_display = selected_staple.name
-                else:
-                    # Fallback if no specific dishes defined for this category
-                    daily_staple_display = daily_staple_cat
-
-                dinner = self.generate_dinner(daily_staple_cat, is_egg)
+        # Jan 1
+        holidays_2026.add(datetime.date(2026, 1, 1))
+        # LNY: Feb 14 - Feb 22
+        add_range("2026-02-14", "2026-02-22")
+        # Peace Day: Feb 27 - Mar 1
+        add_range("2026-02-27", "2026-03-01")
+        # Tomb Sweeping: Apr 3 - Apr 6
+        add_range("2026-04-03", "2026-04-06")
+        # Labor Day: May 1 - May 3
+        add_range("2026-05-01", "2026-05-03")
+        # Dragon Boat: Jun 19 - Jun 21
+        add_range("2026-06-19", "2026-06-21")
+        # Moon Festival: Sep 25 - Sep 28
+        add_range("2026-09-25", "2026-09-28")
+        # Double Ten: Oct 9 - Oct 11
+        add_range("2026-10-09", "2026-10-11")
+        # Retrocession: Oct 24 - Oct 26
+        add_range("2026-10-24", "2026-10-26")
+        # Constitution: Dec 25 - Dec 27
+        add_range("2026-12-25", "2026-12-27")
+        
+        # Pre-calculate dates
+        calendar_dates = []
+        for i in range(days):
+            d = start_date + datetime.timedelta(days=i)
+            calendar_dates.append(d)
+        
+        # Group by ISO Week to manage resets
+        # Logic: Iterating day by day. Check if week number changes.
+        
+        for current_date in calendar_dates:
+            year, week, weekday = current_date.isocalendar() # Mon=1, Sun=7
+            week_key = (year, week)
             
-            # Record the day's plan
+            # Reset counters on new week
+            if week_key != current_week:
+                weekly_used_dishes = set()
+                weekly_fish_count = 0
+                current_week = week_key
+            
             day_data = {
-                'Day': day_num + 1,
-                'Date': current_date, # Date object
+                'Day': (current_date - start_date).days + 1,
+                'Date': current_date,
                 'DateStr': current_date.strftime("%Y-%m-%d"),
-                'Weekday': current_date.strftime("%a"), # Mon, Tue...
-                'Staple': daily_staple_display,
-                'Dinner': [d.name for d in dinner],
-                'Dinner_Objects': dinner
+                'Weekday': current_date.strftime("%a"),
+                'Staple': '',
+                'Dinner_Objects': [],
+                'Dinner': [],
+                'Lunch_Objects': [] # Empty
             }
+            
+            # Skip weekends (Sat=6, Sun=7) OR Holidays
+            is_holiday = (current_date in holidays_2026)
+            if weekday > 5 or is_holiday:
+                if is_holiday:
+                    day_data['Staple'] = 'Holiday'
+                plan.append(day_data)
+                continue
+                
+            # Weekday Logic
+            # Egg Days: Random 3 days of Mon(1)..Fri(5)
+            # We need to know WHICH days are egg days for this specific week.
+            # Deterministic/Consistent egg days? Or Random?
+            # "Weekly Egg Rule: Exactly 3 weekdays".
+            # We need to decide egg days for the WHOLE week when we enter the week.
+            
+            # Quick hack: Generate egg schedule on the fly if not exists
+            if not hasattr(self, 'egg_schedule') or self.egg_schedule_week != week_key:
+                self.egg_schedule_week = week_key
+                # Pick 3 days from 1..5
+                days_indices = sorted(random.sample(range(1, 6), 3))
+                self.egg_days = set(days_indices)
+                
+            is_egg_day = (weekday in self.egg_days)
+            
+            # Staple
+            # Need to get category first to determine counts
+            # Staple
+            # Need to get category first to determine counts
+            staple_name = self.get_daily_staple(current_date, is_egg_day, last_combo_date)
+            
+            if 'Combo' in staple_name:
+                last_combo_date = current_date
+
+            # get_daily_staple returns actual name now? 
+            # No, looking at my previous view, lines 69-110 in planner.py:
+            # It returns `selected` which is a category string e.g. 'Rice', 'Combo (Rice)'.
+            # Wait, viewing the file content again...
+            # The view showed `get_daily_staple` returning `selected`.
+            # `selected` comes from `allowed_types` which is `['Rice', ... 'Combo (Rice)']`.
+            # So it returns CATEGORY.
+            
+            staple_cat = staple_name
+            # Select specific dish name for staple
+            # Assuming staples are not in `dishes` list but hardcoded or generic?
+            # Previous summary said: "All staple categories now display a specific dish name ... in CSV".
+            # DISHES CSV has: `咖哩飯,Combo (Rice),...`, `飯,Rice,`, `雞湯麵,Combo (Noodle)...`
+            # So I need to pick a Dish object from `self.by_category[staple_cat]`.
+            
+            staple_dish_name = staple_cat # Default
+            s_options = self.by_category[staple_cat]
+            if s_options:
+                s_dish = random.choice(s_options)
+                staple_dish_name = s_dish.name
+            
+            day_data['Staple'] = staple_dish_name
+            
+            # Dinner
+            dinner_dishes = self.generate_dinner(staple_cat, is_egg_day, weekly_used_dishes, weekly_fish_count)
+            day_data['Dinner_Objects'] = dinner_dishes
+            day_data['Dinner'] = [d.name for d in dinner_dishes]
+            
+            # Update trackers
+            for d in dinner_dishes:
+                weekly_used_dishes.add(d.name)
+                if self.identify_meat_type(d.name) == 'Fish':
+                    weekly_fish_count += 1
+            
             plan.append(day_data)
+            
         return plan
 
     def aggregate_ingredients(self, plan):

@@ -360,15 +360,18 @@ def generate_html_report(plan, shopping_lists, output_file="meal_plan_report.htm
             date_obj = day['Date']
             date_str = date_obj.strftime("%m/%d")
             is_weekend = len(day['Dinner_Objects']) == 0
+            is_holiday = day.get('Staple') == 'Holiday'
             
-            if is_weekend:
+            if is_weekend or is_holiday:
+                 card_class = "weekend" if is_weekend and not is_holiday else "holiday"
+                 message = "No Meal Plan" if is_weekend and not is_holiday else "Holiday / No Meal"
                  html_content.append(f"""
-                <div class="day-card weekend">
+                <div class="day-card {card_class}">
                     <div class="date-header">
                         <span class="date-num">{date_str}</span>
                         <span class="date-weekday">{day['Weekday']}</span>
                     </div>
-                    <div class="free-day-content">No Meal Plan</div>
+                    <div class="{card_class}-content">{message}</div>
                 </div>
                 """)
             else:
@@ -1000,11 +1003,15 @@ def generate_print_html(plan, output_file="meal_plan_a4.html"):
             cell_html += f'<div class="date-row"><span>{date_str}</span></div>'
             
             staple = day.get('Staple', '')
-            cell_html += f'<div class="staple">{staple}</div>'
-            cell_html += '<div class="dish-list">'
-            for d in day['Dinner_Objects']:
-                cell_html += f'<div class="dish dish-{d.category}">{d.name}</div>'
-            cell_html += '</div>'
+            if staple == 'Holiday':
+                cell_html += f'<div class="staple" style="background: #fee2e2; color: #b91c1c;">HOLIDAY</div>'
+                cell_html += '<div class="dish-list" style="align-items: center; justify-content: center; color: #ccc;">No Meal</div>'
+            else:
+                cell_html += f'<div class="staple">{staple}</div>'
+                cell_html += '<div class="dish-list">'
+                for d in day['Dinner_Objects']:
+                    cell_html += f'<div class="dish dish-{d.category}">{d.name}</div>'
+                cell_html += '</div>'
                 
             cell_html += '</div>'
             html_content.append(cell_html)

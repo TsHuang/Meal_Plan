@@ -2,7 +2,7 @@ Dish Name,Category,Ingredients
 鮭魚（加洋蔥、黑胡椒、鹽）,Protein,鮭魚
 荷包蛋,Egg,雞蛋
 炒牛肉（加洋蔥、醬油膏）,Protein,牛小排
-煎豆腐,Other,豆腐
+滷豆腐,Other,豆腐
 鴻禧菇,Other,鴻禧菇
 咖哩飯,Combo (Rice),"馬鈴薯, 蘋果, 洋蔥, 咖哩塊, 紅蘿蔔, 雞肉或牛小排"
 雞湯麵,Combo (Noodle),"雞肉, 香菇, 蒜頭, 麵"
@@ -11,7 +11,7 @@ Dish Name,Category,Ingredients
 紅蘿蔔炒蛋,Egg,"雞蛋, 紅蘿蔔"
 虱目魚（加鹽、薑）,Protein,虱目魚
 炒干貝,Other,干貝
-蝦子炒蛋,"Egg, Protein","蝦子, 雞蛋"
+蝦子炒蛋,Protein,"蝦子, 雞蛋"
 蒜末炒吻仔魚,Protein,吻仔魚
 薑絲蛤蜊湯,Soup,蛤蜊
 絲瓜蛤蜊,Vegetable,"絲瓜, 蛤蜊"
@@ -29,4 +29,5 @@ Dish Name,Category,Ingredients
 金針菇（加醬油）,Other,金針菇
 番茄牛肉飯,Combo (Rice),"番茄, 牛小排, 洋蔥, 馬鈴薯"
 飯,Rice,
-麵,Noodle,麵
+鴻禧菇炒娃娃菜,Other,"鴻禧菇, 娃娃菜"
+烤豬肉（氣炸鍋180度20分鐘）,Protein,豬頸肉
