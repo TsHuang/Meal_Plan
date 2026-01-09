@@ -171,6 +171,21 @@ class MealPlanner:
                 if m_type and m_type in daily_meats:
                     continue
                     
+                # Constraint: Incompatibility (Yuba vs Tofu)
+                # 炒腐竹 vs 滷豆腐
+                incompatible_pairs = [{'炒腐竹', '滷豆腐'}]
+                is_incompatible = False
+                current_names = {x.name for x in meal}
+                for pair in incompatible_pairs:
+                    if d.name in pair:
+                        # Check if the OTHER element of the pair is already in meal
+                        other = (pair - {d.name}).pop()
+                        if other in current_names:
+                            is_incompatible = True
+                            break
+                if is_incompatible:
+                    continue
+                    
                 valid.append(d)
                 
             if not valid:
@@ -270,6 +285,7 @@ class MealPlanner:
         weekly_used_dishes = set()
         weekly_fish_count = 0
         last_combo_date = None
+        monthly_dish_counts = Counter()
         
         # Holiday List for 2026 (Taiwan)
         # Assuming manual entry based on user request "Refer to Taiwan Holidays"
@@ -376,18 +392,81 @@ class MealPlanner:
             # `selected` comes from `allowed_types` which is `['Rice', ... 'Combo (Rice)']`.
             # So it returns CATEGORY.
             
+            # Staple Selection with Monthly Limits
             staple_cat = staple_name
-            # Select specific dish name for staple
-            # Assuming staples are not in `dishes` list but hardcoded or generic?
-            # Previous summary said: "All staple categories now display a specific dish name ... in CSV".
-            # DISHES CSV has: `咖哩飯,Combo (Rice),...`, `飯,Rice,`, `雞湯麵,Combo (Noodle)...`
-            # So I need to pick a Dish object from `self.by_category[staple_cat]`.
+            s_options = self.by_category.get(staple_cat, [])
             
-            staple_dish_name = staple_cat # Default
-            s_options = self.by_category[staple_cat]
-            if s_options:
-                s_dish = random.choice(s_options)
+            # Limits Definition
+            monthly_limits = {
+                '雞湯麵': 2,
+                '番茄牛肉飯': 1,
+                '義大利麵': 1,
+                '咖哩飯': 1
+            }
+            
+            valid_s_options = []
+            for s in s_options:
+                # Check limit
+                # Match by substring for flexibility
+                limit = 999
+                matched_key = None
+                for key, lim in monthly_limits.items():
+                    if key in s.name:
+                        limit = lim
+                        matched_key = key
+                        break
+                
+                # Check current count
+                # Use the matched key for counting if found, else full name
+                # Actually better to count by Full Name, but check limit against rule.
+                # But if we have multiple variants of "Chicken Soup", we might want to group them?
+                # User gave specific names. Let's assume singular variants for now.
+                # But wait, if name is long "Pasta...", we must count "Pasta..." usage.
+                
+                count = monthly_dish_counts[s.name]
+                if count < limit:
+                    valid_s_options.append(s)
+            
+            staple_dish_name = staple_cat # Fallback
+            if valid_s_options:
+                s_dish = random.choice(valid_s_options)
                 staple_dish_name = s_dish.name
+                monthly_dish_counts[s_dish.name] += 1
+            elif s_options:
+                # Fallback if specific limit reached (e.g. no more Curry allowed)
+                # Try to pick something else from the category if possible?
+                # If everything in this category is exhausted (unlikely for Rice, but possible for Combo),
+                # If Combo is exhausted, we might have an issue. 
+                # But Combo has other options? 
+                # If only restricted items are available, we forced to break rule or change category?
+                # Simple fallback: Pick anything from options, ignoring limit (Soft Limit) 
+                # OR Fallback to "Rice" (if Combo failed)?
+                # Let's fallback to "Rice" (Plain) if it's a Combo/Rice category and we ran out of fancy options.
+                
+                # Try finding a non-limited option
+                unlimited = [s for s in s_options if not any(k in s.name for k in monthly_limits)]
+                if unlimited:
+                    s_dish = random.choice(unlimited)
+                    staple_dish_name = s_dish.name
+                    monthly_dish_counts[s_dish.name] += 1
+                else:
+                    # Logic breakdown: User limits might eventually block all Combos if pool is small.
+                    # Current pool: 
+                    # Combo (Noodle): 雞湯麵 (Limit 2). Is there any other Noodle? 
+                    # Let's check CSV... 
+                    # If no other Noodle, then limiting to 2 means only 2 Noodle days/month.
+                    # But we only allow Noodle on Egg Days. 3 Egg Days/week * 4 weeks = 12 days.
+                    # If we block Noodle, what do we serve? Rice?
+                    # Yes, fallback to Rice is safe.
+                    
+                    if staple_cat == 'Combo (Noodle)':
+                         # Fallback to Rice to respect strict limit (Max 2)
+                         # Even if category was Noodle, we switch to Rice dish.
+                         staple_dish_name = '白飯'
+                         staple_cat = 'Rice' # IMPORTANT: Update category so sides are generated for Normal Staple (4 dishes)
+                    else:
+                         staple_dish_name = '白飯' # Safe fallback for Rice category
+                         staple_cat = 'Rice' # Ensure consistency
             
             day_data['Staple'] = staple_dish_name
             

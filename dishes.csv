@@ -12,7 +12,7 @@ Dish Name,Category,Ingredients
 虱目魚（加鹽、薑）,Protein,虱目魚
 炒干貝,Other,干貝
 蝦子炒蛋,Protein,"蝦子, 雞蛋"
-蒜末炒吻仔魚,Protein,吻仔魚
+蒜末炒吻仔魚,Other,吻仔魚
 薑絲蛤蜊湯,Soup,蛤蜊
 絲瓜蛤蜊,Vegetable,"絲瓜, 蛤蜊"
 青花菜,Vegetable,青花菜
@@ -24,10 +24,13 @@ Dish Name,Category,Ingredients
 蒸玉米,Vegetable,玉米
 蒸皎白筍4支,Vegetable,皎白筍
 娃娃菜,Vegetable,娃娃菜
-綠色葉菜,Vegetable,綠色葉菜
-茄子,Other,茄子
+菠菜,Vegetable,菠菜
+燙茄子（不要太軟、燙完冰進去），另外調一碗醬（蜂蜜、香油、醬油）,Other,茄子
 金針菇（加醬油）,Other,金針菇
 番茄牛肉飯,Combo (Rice),"番茄, 牛小排, 洋蔥, 馬鈴薯"
-飯,Rice,
+白飯,Rice,
 鴻禧菇炒娃娃菜,Other,"鴻禧菇, 娃娃菜"
 烤豬肉（氣炸鍋180度20分鐘）,Protein,豬頸肉
+義大利麵（香油、醬油膏、熱水、海苔）,Rice,義大利麵
+氣炸牛肉丸（牛絞肉、紅蘿蔔籤、洋蔥、雞蛋一顆、地瓜粉少許、醬油、香油）,Protein,牛絞肉
+茼蒿,Vegetable,茼蒿
