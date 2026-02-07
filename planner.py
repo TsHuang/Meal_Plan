@@ -26,7 +26,16 @@ class MealPlanner:
                 print(f"Warning: No dishes found for category '{cat}'")
                 
         # Staple Logic
-        self.staples = ['Rice', 'Combo (Rice)', 'Combo (Noodle)']
+        # Dynamically determine valid staples based on loaded dishes
+        # Only allow Combos if dishes exist for them.
+        self.staples = ['Rice'] # Always allow Rice (will fallback to White Rice)
+        
+        if self.by_category['Combo (Rice)']:
+            self.staples.append('Combo (Rice)')
+            
+        if self.by_category['Combo (Noodle)']:
+            self.staples.append('Combo (Noodle)')
+            
         self.last_noodle_date = None # Track last date noodles were used
 
     def generate_meal(self, n=4):
@@ -151,52 +160,75 @@ class MealPlanner:
         
         # Helper to pick form list
         def pick_valid(category, pool, count=1, exclude_meat_types=None):
-            # Filter by weekly used
-            candidates = [d for d in pool if d.name not in weekly_used_dishes and d not in meal]
+            # Inner function to filter candidates
+            def get_candidates(source_pool, ignore_weekly=False):
+                cand = []
+                for d in source_pool:
+                    if d in meal: continue
+                    if not ignore_weekly and d.name in weekly_used_dishes: continue
+                    cand.append(d)
+                return cand
+
+            # Phase 1: Strict Check (Constraint: Not in weekly_used_dishes)
+            candidates = get_candidates(pool, ignore_weekly=False)
             
-            # Filter by constraints
-            valid = []
-            for d in candidates:
-                # Vegetable Limit: If we already have a vegetable, don't pick another?
-                # Actually enforcing 1 V per day means we pick V exactly once.
-                
-                # Meat Type Uniqueness
-                m_type = self.identify_meat_type(d.name)
-                
-                # Fish Limit
-                if m_type == 'Fish' and weekly_fish_count >= 2:
-                    continue
+            def filter_daily_constraints(cands):
+                valid = []
+                for d in cands:
+                     # Vegetable Limit: If we already have a vegetable, don't pick another?
+                    # Actually enforcing 1 V per day means we pick V exactly once.
                     
-                # Daily Meat Uniqueness
-                if m_type and m_type in daily_meats:
-                    continue
+                    # Meat Type Uniqueness
+                    m_type = self.identify_meat_type(d.name)
                     
-                # Constraint: Incompatibility (Yuba vs Tofu)
-                # 炒腐竹 vs 滷豆腐
-                incompatible_pairs = [{'炒腐竹', '滷豆腐'}]
-                is_incompatible = False
-                current_names = {x.name for x in meal}
-                for pair in incompatible_pairs:
-                    if d.name in pair:
-                        # Check if the OTHER element of the pair is already in meal
-                        other = (pair - {d.name}).pop()
-                        if other in current_names:
-                            is_incompatible = True
-                            break
-                if is_incompatible:
-                    continue
-                    
-                valid.append(d)
-                
-            if not valid:
-                return []
-                
-            # Pick
+                    # Fish Limit
+                    if m_type == 'Fish' and weekly_fish_count >= 2:
+                        continue
+                        
+                    # Daily Meat Uniqueness
+                    if m_type and m_type in daily_meats:
+                        continue
+                        
+                    # Constraint: Incompatibility (Yuba vs Tofu)
+                    incompatible_pairs = [{'炒腐竹', '滷豆腐'}]
+                    is_incompatible = False
+                    current_names = {x.name for x in meal}
+                    for pair in incompatible_pairs:
+                        if d.name in pair:
+                            other = (pair - {d.name}).pop()
+                            if other in current_names:
+                                is_incompatible = True
+                                break
+                    if is_incompatible:
+                        continue
+                        
+                    valid.append(d)
+                return valid
+
+            valid = filter_daily_constraints(candidates)
+            
             picked = []
+            
+            # Try to pick strict
             if len(valid) >= count:
                 picked = random.sample(valid, count)
             else:
-                picked = valid # Take what we can
+                picked = valid[:] # Take all valid strict
+                
+                # Phase 2: Relaxed Check (Ignore weekly used, but respect daily constraints)
+                if len(picked) < count:
+                    needed = count - len(picked)
+                    # Get candidates IGNORING weekly usage, but NOT already picked in meal/this function
+                    relaxed_candidates = get_candidates(pool, ignore_weekly=True)
+                    # Filter out what we already picked in Phase 1
+                    relaxed_candidates = [d for d in relaxed_candidates if d not in picked]
+                    
+                    valid_relaxed = filter_daily_constraints(relaxed_candidates)
+                    
+                    if len(valid_relaxed) >= needed:
+                        picked.extend(random.sample(valid_relaxed, needed))
+                    else:
+                        picked.extend(valid_relaxed) # Take all we can
                 
             for p in picked:
                 m = self.identify_meat_type(p.name)
@@ -427,23 +459,18 @@ class MealPlanner:
                 if count < limit:
                     valid_s_options.append(s)
             
-            staple_dish_name = staple_cat # Fallback
+            staple_dish_name = staple_cat # Default (will use category name if nothing else)
+            
+            # Special fallback for Rice if list is empty (e.g. filtered out)
+            if staple_cat == 'Rice' and not valid_s_options and not s_options:
+                staple_dish_name = '白飯'
+
             if valid_s_options:
                 s_dish = random.choice(valid_s_options)
                 staple_dish_name = s_dish.name
                 monthly_dish_counts[s_dish.name] += 1
             elif s_options:
-                # Fallback if specific limit reached (e.g. no more Curry allowed)
-                # Try to pick something else from the category if possible?
-                # If everything in this category is exhausted (unlikely for Rice, but possible for Combo),
-                # If Combo is exhausted, we might have an issue. 
-                # But Combo has other options? 
-                # If only restricted items are available, we forced to break rule or change category?
-                # Simple fallback: Pick anything from options, ignoring limit (Soft Limit) 
-                # OR Fallback to "Rice" (if Combo failed)?
-                # Let's fallback to "Rice" (Plain) if it's a Combo/Rice category and we ran out of fancy options.
-                
-                # Try finding a non-limited option
+                # Fallback Logic
                 unlimited = [s for s in s_options if not any(k in s.name for k in monthly_limits)]
                 if unlimited:
                     s_dish = random.choice(unlimited)
@@ -502,19 +529,49 @@ class MealPlanner:
                     
         return shopping_lists
 
+def load_dishes_from_data(records):
+    """
+    Parses a list of dictionaries (from CSV or Sheets) into Dish objects.
+    """
+    dishes = []
+    for row in records:
+        # Handle potential key case sensitivity or whitespace
+        name = row.get('Dish Name') or row.get('name')
+        cat = row.get('Category') or row.get('category')
+        ings = row.get('Ingredients') or row.get('ingredients')
+        
+        if name and cat:
+            # Filter by "This Week" (本週想吃) if column exists and has content
+            # If column is missing, include everything (backward compatibility)
+            # If column exists, only include if 'O' or 'o'.
+            
+            # Check for variations of the column name
+            week_flag = row.get('本週想吃') or row.get('this week')
+            
+            if week_flag:
+                if str(week_flag).strip().upper() == 'O':
+                        dishes.append(Dish(name, cat, ings if ings else ""))
+            else:
+                # If the column is completely missing (not just empty value, but missing key), load everything?
+                # Actually DictReader keys are fixed from header.
+                keys = row.keys()
+                if '本週想吃' in keys or 'this week' in keys:
+                    # Column exists but value is empty -> Skip
+                    pass
+                else:
+                    # Column doesn't exist -> Load all
+                    dishes.append(Dish(name, cat, ings if ings else ""))
+    return dishes
+
 def load_dishes_from_csv(filepath):
     dishes = []
     try:
         with open(filepath, 'r', encoding='utf-8-sig') as f:
             reader = csv.DictReader(f)
-            for row in reader:
-                # Handle potential key case sensitivity or whitespace
-                name = row.get('Dish Name') or row.get('name')
-                cat = row.get('Category') or row.get('category')
-                ings = row.get('Ingredients') or row.get('ingredients')
-                
-                if name and cat:
-                    dishes.append(Dish(name, cat, ings if ings else ""))
+            # Convert reader to list of dicts
+            records = [row for row in reader]
+            dishes = load_dishes_from_data(records)
+            
     except Exception as e:
         print(f"Error loading CSV: {e}")
         return []

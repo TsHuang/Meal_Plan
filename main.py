@@ -1,13 +1,17 @@
 import argparse
 import sys
 import os
-from planner import load_dishes_from_csv, MealPlanner, save_plan_to_csv, save_shopping_list
+from planner import load_dishes_from_csv, load_dishes_from_data, MealPlanner, save_plan_to_csv, save_shopping_list
 from html_reporter import generate_html_report, generate_mobile_report, generate_mobile_shopping_list, generate_print_html
+import os
 
 def main():
     parser = argparse.ArgumentParser(description="Weekly Meal Planner & Shopping List Generator")
-    parser.add_argument('--input', '-i', default='dishes.csv', help='Path to the input dishes CSV file')
-    parser.add_argument('--days', '-d', type=int, default=28, help='Number of days to plan (default: 28)')
+    parser.add_argument('--input', '-i', default='dishes.csv', help='Path to the input dishes CSV file (default: dishes.csv)')
+    parser.add_argument('--source', default='csv', choices=['csv', 'sheets'], help='Data source: "csv" or "sheets"')
+    parser.add_argument('--creds', default='service_account.json', help='Path to Google Cloud Service Account JSON (for Sheets)')
+    parser.add_argument('--sheet', default='Dish List', help='Name of the Google Sheet')
+    parser.add_argument('--days', '-d', type=int, default=7, help='Number of days to plan (default: 7)')
     parser.add_argument('--output-plan', '-o', default='meal_plan.csv', help='Output filename for the meal plan')
     parser.add_argument('--output-shop', '-s', default='shopping_list.csv', help='Output filename for the shopping list')
     parser.add_argument('--output-html', '-w', default='meal_plan_report.html', help='Output filename for the Web Report')
@@ -15,17 +19,33 @@ def main():
     
     args = parser.parse_args()
     
-    input_path = os.path.abspath(args.input)
-    if not os.path.exists(input_path):
-        print(f"Error: Input file '{input_path}' not found.")
-        print("Please provide a valid CSV file with columns: Dish Name, Category, Ingredients")
-        sys.exit(1)
+    dishes = []
+    
+    if args.source == 'csv':
+        input_path = os.path.abspath(args.input)
+        if not os.path.exists(input_path):
+            print(f"Error: Input file '{input_path}' not found.")
+            sys.exit(1)
+            
+        print(f"Loading dishes from CSV: {input_path}...")
+        dishes = load_dishes_from_csv(input_path)
         
-    print(f"Loading dishes from {input_path}...")
-    dishes = load_dishes_from_csv(input_path)
+    elif args.source == 'sheets':
+        print(f"Loading dishes from Google Sheet: '{args.sheet}'...")
+        # Lazy import to avoid error if requirements not installed
+        try:
+            from sheets_adapter import fetch_dishes_from_sheets
+        except ImportError:
+            print("Error: Google Sheets dependencies not found.")
+            print("Please run: pip install gspread oauth2client")
+            sys.exit(1)
+            
+        creds_path = os.path.abspath(args.creds)
+        records = fetch_dishes_from_sheets(creds_path, args.sheet)
+        dishes = load_dishes_from_data(records)
     
     if not dishes:
-        print("Error: No dishes loadable from file. Check format.")
+        print("Error: No dishes loadable. Check source file/sheet.")
         sys.exit(1)
         
     print(f"Loaded {len(dishes)} dishes.")
